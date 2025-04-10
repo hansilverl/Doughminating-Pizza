@@ -58,7 +58,7 @@ public class MenuController : MonoBehaviour
         {
             tap = false;
             Vector3 startingScale = _btn.transform.localScale;  
-            Vector3 destinationScale = startingScale * 0.85f;       
+            Vector3 destinationScale = startingScale * 0.85f;                           
 
             //Scale up
             float t = 0.0f;
