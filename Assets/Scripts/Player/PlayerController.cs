@@ -2,87 +2,98 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
-    // Movement speeds
+    [Header("Movement Settings")]
     public float walkingSpeed = 7f;
     public float runningSpeed = 11f;
-    public float jumpSpeed = 8.0f;
-    public float gravity = 20.0f;
+    public float jumpForce = 8f;
+    public float groundCheckDistance = 1.1f;
 
-    // Camera settings
+    [Header("Camera Settings")]
     public Camera playerCamera;
-    public float lookSpeed = 1.0f;
-    public float lookXLimit = 45.0f;
+    public float mouseSensitivityX = 15f;
+    public float mouseSensitivityY = 15f;
+    public float minY = -60f;
+    public float maxY = 60f;
 
-    CharacterController characterController;
-    Vector3 moveDirection = Vector3.zero;
-    float rotationX = 0;
+    private float rotationY = 0f;
+    private Rigidbody rb;
+    private bool isGrounded;
 
     [HideInInspector]
     public bool canMove = true;
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
-
-        // Lock the cursor to the center of the screen and make it invisible
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true; // Prevent physics from rotating the player
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
-        // Get input for horizontal and vertical movement
-        float inputX = Input.GetAxis("Horizontal");
-        float inputZ = Input.GetAxis("Vertical");
-
-        // Calculate the movement direction relative to the player's orientation
-        Vector3 forward = transform.forward;
-        Vector3 right = transform.right;
-        Vector3 direction = (forward * inputZ + right * inputX).normalized;
-
-        // Check if the player is running
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
-        float speed = isRunning ? runningSpeed : walkingSpeed;
-
-        // Set horizontal movement speed
-        moveDirection.x = direction.x * speed;
-        moveDirection.z = direction.z * speed;
-
-        // Handle jumping and gravity
-        if (characterController.isGrounded)
-        {
-            // On the ground: allow jump or reset vertical speed
-            moveDirection.y = Input.GetButton("Jump") ? jumpSpeed : 0f;
-        }
-        else
-        {
-            // Apply gravity when not grounded
-            moveDirection.y -= gravity * Time.deltaTime;
-        }
-
-        // Move the player using CharacterController, multiplying by deltaTime for frame rate independence
-        characterController.Move(moveDirection * Time.deltaTime);
-
-        // Handle camera and player rotation if movement is allowed
         if (canMove)
         {
-            HandleCameraLook();
+            HandleMouseLook();
+        }
+
+        // Jump input is handled in Update for better responsiveness
+        if (Input.GetButtonDown("Jump") && IsGrounded())
+        {
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
         }
     }
 
-    // Method to handle camera look and horizontal player rotation
-    void HandleCameraLook()
+    void FixedUpdate()
     {
-        // Update vertical rotation based on mouse movement
-        rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-        // Clamp the vertical rotation to prevent over-rotation
-        rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-        // Apply the vertical rotation to the camera's local rotation
-        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-        // Rotate the player horizontally based on mouse movement
-        transform.Rotate(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+        if (!canMove) return;
+
+        // Using Input.GetAxisRaw for more immediate response
+        float inputX = Input.GetAxisRaw("Horizontal");
+        float inputZ = Input.GetAxisRaw("Vertical");
+
+        Vector3 cameraForward = playerCamera.transform.forward;
+        Vector3 cameraRight = playerCamera.transform.right;
+
+        // Flatten the vectors to avoid moving up/down
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        Vector3 moveDirection = (cameraForward * inputZ + cameraRight * inputX).normalized;
+
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        float speed = isRunning ? runningSpeed : walkingSpeed;
+
+        Vector3 targetVelocity = moveDirection * speed;
+        Vector3 velocityChange = targetVelocity - new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+    }
+
+    void HandleMouseLook()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivityX;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivityY;
+
+        // Horizontal rotation (Y-axis)
+        transform.Rotate(0, mouseX, 0);
+
+        // Vertical rotation (X-axis)
+        rotationY += mouseY;
+        rotationY = Mathf.Clamp(rotationY, minY, maxY);
+
+        // Apply vertical rotation to the camera only
+        playerCamera.transform.localRotation = Quaternion.Euler(-rotationY, 0, 0);
+    }
+
+    bool IsGrounded()
+    {
+        Vector3 origin = transform.position + Vector3.up * 0.1f; // raise it slightly above the base
+        return Physics.Raycast(origin, Vector3.down, groundCheckDistance);
     }
 }
