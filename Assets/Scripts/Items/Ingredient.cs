@@ -8,4 +8,5 @@ public abstract class Ingredient : MonoBehaviour, IInteractable
     public abstract void Interact(); // must be implemented in subclasses
 
     public abstract string getInteractionText(); // returns the name of the ingredient
+    public string GetIngredientName() => ingredientName; // returns the name of the ingredient
 }

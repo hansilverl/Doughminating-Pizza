@@ -8,12 +8,12 @@ public class Tomato : Ingredient
     {
         // Check if the ingredient is already chopped or choppable
         Choppable chopped = GetComponent<Choppable>();
-        Debug.Log("Interacted with " + ingredientName);
+        Debug.Log("Interacted with " + GetIngredientName());
     }
 
     public override string getInteractionText()
     {
-        return "Press 'E' to interact with " + ingredientName;
+        return "Press 'E' to interact with " + GetIngredientName();
     }
 
     // Awake happens immediately when the object is instantiated
