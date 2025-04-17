@@ -50,7 +50,7 @@ public class PlayerInteraction : MonoBehaviour
 
     void HandleInteractionInput()
     {
-        if (currentInteractable != null && Input.GetKeyDown(KeyCode.E))
+        if (currentInteractable != null && (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)))
         {
             currentInteractable.Interact();
         }
