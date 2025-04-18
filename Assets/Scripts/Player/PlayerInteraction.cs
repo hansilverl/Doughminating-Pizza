@@ -31,9 +31,11 @@ public class PlayerInteraction : MonoBehaviour
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
+
         if (Physics.Raycast(ray, out hit, interactionDistance))
         {
-            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+            IInteractable interactable = hit.collider.GetComponent<IInteractable>()
+                          ?? hit.collider.GetComponentInParent<IInteractable>();
 
             if (interactable != null)
             {
