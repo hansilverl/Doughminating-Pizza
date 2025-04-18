@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Tool : MonoBehaviour, IInteractable
+public abstract class Tool : MonoBehaviour, IInteractable, IPickable
 {
     [SerializeField] private string toolName;
 
