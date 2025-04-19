@@ -22,7 +22,7 @@ public class PlayerHand : MonoBehaviour
             heldItem = item;
             heldItem.transform.SetParent(holdPoint);
             heldItem.transform.localPosition = item.GetComponent<Ingredient>().GetHandPositionOffset();
-            heldItem.transform.localRotation = Quaternion.identity;
+            heldItem.transform.localRotation = Quaternion.Euler(item.GetComponent<Ingredient>().GetHandRotationOffset());
             Debug.Log("Held item: " + heldItem.name);
         }
         else Debug.Log("Item is not pickable");

@@ -157,7 +157,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ingredientName: Pizza Sauce
-  handPositionOffset: {x: 0, y: 0, z: 0}
+  handPositionOffset: {x: 0.13, y: 0.075, z: 0.44}
+  handRotationOffset: {x: -60, y: 50, z: -20}
 --- !u!1 &2425086827816661537 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8053839958266102987, guid: 34c7cd7cccabd401db77a1fd4d73c897,
