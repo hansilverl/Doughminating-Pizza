@@ -8,27 +8,42 @@ public class PlayerHand : MonoBehaviour
     private GameObject heldItem;
     public bool IsHoldingItem => heldItem != null;
 
-    public void PickUp(IPickable item)
+    public void PickUp(GameObject item)
     {
         Debug.Log("Picked up item: " + item);
-        if (heldItem != null)
+        if (item.CompareTag("Tool") || item.CompareTag("Ingredient"))
         {
+            if (heldItem != null)
+            {
             Debug.Log("Already holding an item. Cannot pick up another.");
             return;
-        }
-        if (item is GameObject)
-        {
-            Debug.Log("Item is a valid pickable object.");
-            // heldItem = item as GameObject;
-            // heldItem.transform.SetParent(holdPoint);
-            // heldItem.transform.localPosition = Vector3.zero;
-            // heldItem.transform.localRotation = Quaternion.identity;
+            }
+
+            heldItem = item;
+            heldItem.transform.SetParent(holdPoint);
+            heldItem.transform.localPosition = item.GetComponent<Ingredient>().GetHoldPositionOffset();
+            heldItem.transform.localRotation = Quaternion.identity;
             Debug.Log("Held item: " + heldItem.name);
         }
-        else
-        {
-            Debug.Log("Item is not a valid pickable object.");
-        }
+        else Debug.Log("Item is not pickable");
+        // if (heldItem != null)
+        // {
+        //     Debug.Log("Already holding an item. Cannot pick up another.");
+        //     return;
+        // }
+        // if (item is GameObject)
+        // {
+        //     Debug.Log("Item is a valid pickable object.");
+        //     // heldItem = item as GameObject;
+        //     // heldItem.transform.SetParent(holdPoint);
+        //     // heldItem.transform.localPosition = Vector3.zero;
+        //     // heldItem.transform.localRotation = Quaternion.identity;
+        //     Debug.Log("Held item: " + heldItem.name);
+        // }
+        // else
+        // {
+        //     Debug.Log("Item is not a valid pickable object.");
+        // }
 
     }
 

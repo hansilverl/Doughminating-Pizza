@@ -13,18 +13,12 @@ public class Tomato : Ingredient
 
         if (playerHand != null && !playerHand.IsHoldingItem)
         {
-            playerHand.PickUp(this);
+            // playerHand.PickUp(this);
         }
     }
 
     public override string getInteractionText()
     {
         return "Press 'E' to interact with " + GetIngredientName();
-    }
-
-    // Awake happens immediately when the object is instantiated
-    void Awake()
-    {
-        ingredientName = "Tomato";
     }
 }
