@@ -23,6 +23,11 @@ public class Blender : Tool
                 if (factory != null)
                 {
                     factory.Interact(); // Triggers the sauce spawn!
+                    AudioSource audio = GetComponent<AudioSource>();
+                    if (audio != null)
+                    {
+                        audio.Play(); // Play the blending sound
+                    }
                 }
 
             }
