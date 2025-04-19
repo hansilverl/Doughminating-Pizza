@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Blender : Tool
 {
-    public override void Interact() {
+    public override void Interact()
+    {
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
         if (playerHand != null && playerHand.IsHoldingItem)
         {
@@ -16,11 +17,20 @@ public class Blender : Tool
                 Debug.Log("Blending " + ingredient.GetIngredientName() + " with " + GetToolName());
                 // You can add more logic to handle the blending process
                 playerHand.Remove();
+
+                //Reuse IngredientFactory
+                IngredientFactory factory = GetComponent<IngredientFactory>();
+                if (factory != null)
+                {
+                    factory.Interact(); // Triggers the sauce spawn!
+                }
+
             }
         }
     }
 
-    public override string getInteractionText() {
+    public override string getInteractionText()
+    {
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
         if (playerHand != null && playerHand.IsHoldingItem)
         {
@@ -28,7 +38,7 @@ public class Blender : Tool
             Ingredient ingredient = held.GetComponent<Ingredient>();
             if (ingredient != null)
             {
-                return "Press 'E' to blend " + ingredient.GetIngredientName() + " with " + GetToolName();
+                return "Press 'E' to blend " + ingredient.GetIngredientName();
             }
         }
 
