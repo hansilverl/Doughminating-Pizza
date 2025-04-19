@@ -9,6 +9,6 @@ public abstract class Ingredient : MonoBehaviour, IInteractable, IPickable
     public abstract void Interact(); // must be implemented in subclasses
 
     public abstract string getInteractionText(); // returns the name of the ingredient
-    public string GetIngredientName() => ingredientName; // returns the name of the ingredient
-    public Vector3 GetHandPositionOffset() => handPositionOffset; // returns the hand position offset
+    public string GetIngredientName() => this.ingredientName; // returns the name of the ingredient
+    public Vector3 GetHandPositionOffset() => this.handPositionOffset; // returns the hand position offset
 }

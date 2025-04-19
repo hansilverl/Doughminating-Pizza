@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ingredientName: Tomato
-  holdPositionOffset: {x: 0.009, y: 0.04, z: 0.258}
+  handPositionOffset: {x: 0.009, y: 0.03, z: 0.258}
 --- !u!1 &9099940858322685034 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7029948723529949830, guid: c0e299e18f23140a68a545ad679c1536,
