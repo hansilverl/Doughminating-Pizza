@@ -21,7 +21,7 @@ public class PlayerHand : MonoBehaviour
 
             heldItem = item;
             heldItem.transform.SetParent(holdPoint);
-            heldItem.transform.localPosition = item.GetComponent<Ingredient>().GetHoldPositionOffset();
+            heldItem.transform.localPosition = item.GetComponent<Ingredient>().GetHandPositionOffset();
             heldItem.transform.localRotation = Quaternion.identity;
             Debug.Log("Held item: " + heldItem.name);
         }
