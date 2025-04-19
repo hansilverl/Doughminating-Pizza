@@ -72,7 +72,18 @@ public class PlayerController : MonoBehaviour
         Vector3 targetVelocity = moveDirection * speed;
         Vector3 velocityChange = targetVelocity - new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
-        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        if(speed != 0)
+        {
+            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+            // Move the item in the player's hand up and down
+            PlayerHand playerHand = GetComponentInChildren<PlayerHand>();
+            if (playerHand != null)
+            {
+                playerHand.MoveItemUpDown();
+            }
+        }
+
+        // rb.AddForce(velocityChange, ForceMode.VelocityChange);
     }
 
     void HandleMouseLook()

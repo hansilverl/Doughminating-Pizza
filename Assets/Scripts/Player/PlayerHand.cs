@@ -7,7 +7,7 @@ public class PlayerHand : MonoBehaviour
     [SerializeField] private Transform holdPoint;
     private GameObject heldItem;
     public bool IsHoldingItem => heldItem != null;
-
+    public GameObject HeldItem => heldItem;
     public void PickUp(GameObject item)
     {
         Debug.Log("Picked up item: " + item);
@@ -45,6 +45,14 @@ public class PlayerHand : MonoBehaviour
         //     Debug.Log("Item is not a valid pickable object.");
         // }
 
+    }
+    public void MoveItemUpDown() {
+        if (heldItem != null)
+        {
+            Vector3 newPosition = heldItem.transform.localPosition;
+            newPosition.y += Mathf.Sin(Time.time) * 0.0001f; // Adjust the multiplier for height
+            heldItem.transform.localPosition = newPosition;
+        }
     }
 
 
