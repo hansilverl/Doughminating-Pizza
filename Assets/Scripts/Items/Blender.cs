@@ -5,7 +5,19 @@ using UnityEngine;
 public class Blender : Tool
 {
     public override void Interact() {
-        Debug.Log("Interacted with " + GetToolName());
+        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
+        if (playerHand != null && playerHand.IsHoldingItem)
+        {
+            GameObject held = playerHand.HeldItem;
+            Ingredient ingredient = held.GetComponent<Ingredient>();
+            if (ingredient != null)
+            {
+                // Perform blending logic here
+                Debug.Log("Blending " + ingredient.GetIngredientName() + " with " + GetToolName());
+                // You can add more logic to handle the blending process
+                playerHand.Remove();
+            }
+        }
     }
 
     public override string getInteractionText() {

@@ -46,6 +46,15 @@ public class PlayerHand : MonoBehaviour
         // }
 
     }
+    public void Remove() {
+        if (heldItem != null)
+        {
+            Destroy(heldItem);
+            heldItem.transform.SetParent(null);
+            heldItem = null;
+            Debug.Log("Removed item from hand.");
+        }
+    }
     public void MoveItemUpDown() {
         if (heldItem != null)
         {
