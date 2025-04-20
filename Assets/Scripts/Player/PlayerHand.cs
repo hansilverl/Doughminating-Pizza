@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerHand : MonoBehaviour
 {
     [SerializeField] private Transform holdPoint;
+    [SerializeField] private float floatHeight = 0.0001f; // Adjust this value to control the floating height
+    [SerializeField] private float floatSpeed = 2f; // Adjust this value to control the floating speed
     private GameObject heldItem;
     public bool IsHoldingItem => heldItem != null;
     public GameObject HeldItem => heldItem;
@@ -26,24 +28,6 @@ public class PlayerHand : MonoBehaviour
             Debug.Log("Held item: " + heldItem.name);
         }
         else Debug.Log("Item is not pickable");
-        // if (heldItem != null)
-        // {
-        //     Debug.Log("Already holding an item. Cannot pick up another.");
-        //     return;
-        // }
-        // if (item is GameObject)
-        // {
-        //     Debug.Log("Item is a valid pickable object.");
-        //     // heldItem = item as GameObject;
-        //     // heldItem.transform.SetParent(holdPoint);
-        //     // heldItem.transform.localPosition = Vector3.zero;
-        //     // heldItem.transform.localRotation = Quaternion.identity;
-        //     Debug.Log("Held item: " + heldItem.name);
-        // }
-        // else
-        // {
-        //     Debug.Log("Item is not a valid pickable object.");
-        // }
 
     }
     public void Remove() {
@@ -59,7 +43,7 @@ public class PlayerHand : MonoBehaviour
         if (heldItem != null)
         {
             Vector3 newPosition = heldItem.transform.localPosition;
-            newPosition.y += Mathf.Sin(Time.time) * 0.0001f; // Adjust the multiplier for height
+            newPosition.y += Mathf.Sin(Time.time * floatSpeed) * floatHeight; // Adjust the multiplier for height
             heldItem.transform.localPosition = newPosition;
         }
     }

@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public float mouseSensitivityY = 15f;
     public float minY = -60f;
     public float maxY = 60f;
+    public bool invertY = false;
+
 
     private float rotationY = 0f;
     private Rigidbody rb;
@@ -88,18 +90,30 @@ public class PlayerController : MonoBehaviour
 
     void HandleMouseLook()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivityX;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivityY;
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivityX * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivityY * Time.deltaTime;
 
-        // Horizontal rotation (Y-axis)
-        transform.Rotate(0, mouseX, 0);
 
-        // Vertical rotation (X-axis)
-        rotationY += mouseY;
+        
+        // Rotate body on horizontal axis
+        transform.Rotate(Vector3.up * mouseX);
+
+        // Adjust vertical camera rotation
+        rotationY += (invertY ? mouseY : -mouseY);
         rotationY = Mathf.Clamp(rotationY, minY, maxY);
 
-        // Apply vertical rotation to the camera only
-        playerCamera.transform.localRotation = Quaternion.Euler(-rotationY, 0, 0);
+        playerCamera.transform.localRotation = Quaternion.Euler(rotationY, 0f, 0f);
+
+
+        // // Horizontal rotation (Y-axis)
+        // transform.Rotate(0, mouseX, 0);
+
+        // // Vertical rotation (X-axis)
+        // rotationY += mouseY;
+        // rotationY = Mathf.Clamp(rotationY, minY, maxY);
+
+        // // Apply vertical rotation to the camera only
+        // playerCamera.transform.localRotation = Quaternion.Euler(-rotationY, 0, 0);
     }
 
     bool IsGrounded()
