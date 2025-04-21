@@ -27,28 +27,38 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     void HandleInteractionCheck()
+{
+    Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+    RaycastHit hit;
+
+    if (Physics.Raycast(ray, out hit, interactionDistance))
     {
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-        RaycastHit hit;
+        IInteractable interactable = hit.collider.GetComponent<IInteractable>()
+                                  ?? hit.collider.GetComponentInParent<IInteractable>();
 
-
-        if (Physics.Raycast(ray, out hit, interactionDistance))
+        if (interactable != null)
         {
-            IInteractable interactable = hit.collider.GetComponent<IInteractable>()
-                          ?? hit.collider.GetComponentInParent<IInteractable>();
+            currentInteractable = interactable;
+            string interactionText = interactable.getInteractionText();
 
-            if (interactable != null)
+            if (!string.IsNullOrEmpty(interactionText))
             {
-                currentInteractable = interactable;
-                interactionTextUI.text = interactable.getInteractionText();
-                interactionPanel.SetActive(true);
-                return;
+                interactionTextUI.text = interactionText;
+                interactionPanel.SetActive(true); // ✅ Show the whole panel
             }
-        }
+            else
+            {
+                interactionPanel.SetActive(false); // 🔒 Hide if text is empty
+            }
 
-        currentInteractable = null;
-        interactionPanel.SetActive(false);
+            return;
+        }
     }
+
+    currentInteractable = null;
+    interactionPanel.SetActive(false);
+}
+
 
     void HandleInteractionInput()
     {

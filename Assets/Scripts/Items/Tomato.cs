@@ -6,15 +6,7 @@ public class Tomato : Ingredient
 {
     public override void Interact()
     {
-        // Check if the ingredient is already chopped or choppable
-        Choppable chopped = GetComponent<Choppable>();
-
-        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
-
-        if (playerHand != null && !playerHand.IsHoldingItem)
-        {
-            // playerHand.PickUp(this);
-        }
+        base.Interact();
     }
 
     public override string getInteractionText()

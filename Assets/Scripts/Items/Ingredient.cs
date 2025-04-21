@@ -7,7 +7,15 @@ public abstract class Ingredient : MonoBehaviour, IInteractable, IPickable
     [SerializeField] protected string ingredientName;
     [SerializeField] protected Vector3 handPositionOffset;
     [SerializeField] protected Vector3 handRotationOffset;
-    public abstract void Interact(); // must be implemented in subclasses
+    public virtual void Interact() {
+        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
+        if (playerHand != null && !playerHand.IsHoldingItem)
+        {
+            transform.SetParent(null);
+            playerHand.PickUp(this.gameObject);
+            Debug.Log("Picked up " + ingredientName);
+        }
+    }
 
     public abstract string getInteractionText(); // returns the name of the ingredient
     public string GetIngredientName() => this.ingredientName; // returns the name of the ingredient

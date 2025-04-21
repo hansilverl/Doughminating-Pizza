@@ -11,7 +11,7 @@ public class Blender : Tool
         {
             GameObject held = playerHand.HeldItem;
             Ingredient ingredient = held.GetComponent<Ingredient>();
-            if (ingredient != null)
+            if (ingredient != null && ingredient is Tomato)
             {
                 // Perform blending logic here
                 Debug.Log("Blending " + ingredient.GetIngredientName() + " with " + GetToolName());
@@ -41,12 +41,12 @@ public class Blender : Tool
         {
             GameObject held = playerHand.HeldItem;
             Ingredient ingredient = held.GetComponent<Ingredient>();
-            if (ingredient != null)
+            if (ingredient != null && ingredient is Tomato)
             {
                 return "Press 'E' to blend " + ingredient.GetIngredientName();
             }
         }
 
-        return "Press 'E' to blend with " + GetToolName();
+        return "";
     }
 }

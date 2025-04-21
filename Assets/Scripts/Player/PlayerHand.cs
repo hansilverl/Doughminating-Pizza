@@ -12,7 +12,6 @@ public class PlayerHand : MonoBehaviour
     public GameObject HeldItem => heldItem;
     public void PickUp(GameObject item)
     {
-        Debug.Log("Picked up item: " + item);
         if (item.CompareTag("Tool") || item.CompareTag("Ingredient"))
         {
             if (heldItem != null)
@@ -37,6 +36,15 @@ public class PlayerHand : MonoBehaviour
             heldItem.transform.SetParent(null);
             heldItem = null;
             Debug.Log("Removed item from hand.");
+        }
+    }
+
+    public void Drop() {
+        if (heldItem != null)
+        {
+            heldItem.transform.SetParent(null);
+            heldItem = null;
+            Debug.Log("Dropped item from hand.");
         }
     }
     public void MoveItemUpDown() {
