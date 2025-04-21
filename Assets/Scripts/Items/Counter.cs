@@ -18,17 +18,21 @@ public class Counter : MonoBehaviour, IInteractable
                 GameObject item = playerHand.HeldItem;
                 if (item != null)
                 {
-                    // Place the item on the counter
-                    // item.transform.position = hitCoordinates;
-                    // item.transform.SetParent(transform); // Set the parent to the counter
-                    // playerHand.DropItem(); // Drop the item from the player's hand
                     Debug.Log("Item placed on counter");
                     GameObject counter = gameObject;
                     Vector3 counterRotation = counter.transform.rotation.eulerAngles;
+                    float counterOffset = 0f;
+                    Vector3 defaultRotation = item.GetComponent<Ingredient>().GetDefaultRotation(); // Get the default rotation of the ingredient
+                    if(item.CompareTag("Ingredient"))
+                    {
+                        counterOffset = item.GetComponent<Ingredient>().GetCounterPositionOffset(); // Adjust this value as needed for ingredient items
+                    }
                     playerHand.Drop();
                     item.transform.position = new Vector3(hitCoordinates.x, hitCoordinates.y, hitCoordinates.z); // Adjust the height as needed
-                    item.transform.rotation = Quaternion.Euler(counterRotation.x, counterRotation.y, counterRotation.z);
+                    // item.transform.position = new Vector3(hitCoordinates.x, hitCoordinates.y + counterOffset, hitCoordinates.z); // Adjust the height as needed
+                    item.transform.rotation = Quaternion.Euler(counterRotation.x + defaultRotation.x, counterRotation.y + defaultRotation.y, counterRotation.z + defaultRotation.z);
                     item.transform.SetParent(counter.transform); // Set the parent to the counter
+                    item.transform.localPosition = new Vector3(item.transform.localPosition.x, item.transform.localPosition.y + counterOffset, item.transform.localPosition.z); // Adjust the height as needed
                     Debug.Log("Counter: " + counter.name);
 
                 }

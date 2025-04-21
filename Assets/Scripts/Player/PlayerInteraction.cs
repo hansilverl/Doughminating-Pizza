@@ -17,6 +17,10 @@ public class PlayerInteraction : MonoBehaviour
     void Start()
     {
         playerCamera = Camera.main;
+
+        // Warm-up raycast to avoid initial lag
+        Ray dummyRay = new Ray(transform.position, Vector3.forward);
+        Physics.Raycast(dummyRay, out _);
     }
 
     // Update is called once per frame
