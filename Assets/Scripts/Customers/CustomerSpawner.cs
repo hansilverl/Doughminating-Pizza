@@ -15,6 +15,8 @@ public class CustomerSpawner : MonoBehaviour
     void SpawnCustomer()
     {
         GameObject customer = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
+
+        // Установим цель движения
         NavMeshAgent agent = customer.GetComponent<NavMeshAgent>();
         if (agent != null)
         {
