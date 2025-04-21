@@ -30,10 +30,6 @@ public class IngredientFactory : MonoBehaviour, IInteractable
             Debug.Log("Spawned Ingredient: " + ingredient.GetIngredientName());
             playerHand.PickUp(spawned);
         }
-        else
-        {
-            Debug.LogWarning("Spawned object doesn't have an Ingredient component.");
-        }
 
     }
 
