@@ -16,7 +16,13 @@ public class PlayerInteraction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerCamera = Camera.main;
+        Debug.Log("PlayerInteraction script started.");
+        // Find the camera in the scene and assign it to playerCamera
+        // playerCamera = Camera.main;
+        if (playerCamera == null)
+        {
+            Debug.LogError("PlayerInteraction: Camera not found. Please assign a camera in the inspector.");
+        }
 
         // Warm-up raycast to avoid initial lag
         Ray dummyRay = new Ray(transform.position, Vector3.forward);
