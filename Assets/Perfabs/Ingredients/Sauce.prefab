@@ -124,7 +124,7 @@ MonoBehaviour:
   handPositionOffset: {x: 0.197, y: 0.05, z: 0.58}
   handRotationOffset: {x: -100, y: 65, z: -65}
   defaultRotation: {x: -90, y: 0, z: 0}
-  counterPositionOffset: 4.5
+  counterPositionOffset: 1.6
 --- !u!136 &2431100427910315368
 CapsuleCollider:
   m_ObjectHideFlags: 0
