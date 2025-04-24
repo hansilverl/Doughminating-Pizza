@@ -120,11 +120,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb31c7c5d46034528907cc10d1d4b4f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientName: 
   handPositionOffset: {x: 0.197, y: 0.05, z: 0.58}
   handRotationOffset: {x: -100, y: 65, z: -65}
   defaultRotation: {x: -90, y: 0, z: 0}
   counterPositionOffset: 1.6
+  ingredientName: Sauce
 --- !u!136 &2431100427910315368
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -27395,9 +27395,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8df955d755c0364293439583344783d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handPositionOffset: {x: -0.02, y: 0.03, z: 0.5}
+  handRotationOffset: {x: -45, y: 0.8, z: -2.18}
+  defaultRotation: {x: 0, y: 0, z: 0}
+  counterPositionOffset: 0.26
   toolName: Rolling Pin
-  handPositionOffset: {x: 0, y: 0, z: 0}
-  handRotationOffset: {x: 0, y: 0, z: 0}
 --- !u!136 &1242750581
 CapsuleCollider:
   m_ObjectHideFlags: 0
