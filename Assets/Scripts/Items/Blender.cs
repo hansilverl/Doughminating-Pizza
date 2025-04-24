@@ -13,9 +13,7 @@ public class Blender : Tool
             Ingredient ingredient = held.GetComponent<Ingredient>();
             if (ingredient != null && ingredient is Tomato)
             {
-                // Perform blending logic here
-                Debug.Log("Blending " + ingredient.GetIngredientName() + " with " + GetToolName());
-                // You can add more logic to handle the blending process
+                // blending tomato logic
                 playerHand.Remove();
 
                 //Reuse IngredientFactory

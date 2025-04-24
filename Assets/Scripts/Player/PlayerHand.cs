@@ -12,21 +12,20 @@ public class PlayerHand : MonoBehaviour
     public GameObject HeldItem => heldItem;
     public void PickUp(GameObject item)
     {
-        if (item.CompareTag("Tool") || item.CompareTag("Ingredient"))
+        IPickable pickable = item.GetComponent<IPickable>();
+        if (pickable != null)
         {
             if (heldItem != null)
             {
-            Debug.Log("Already holding an item. Cannot pick up another.");
-            return;
+                Debug.Log("Already holding an item. Cannot pick up another.");
+                return;
             }
 
             heldItem = item;
             heldItem.transform.SetParent(holdPoint);
-            heldItem.transform.localPosition = item.GetComponent<Ingredient>().GetHandPositionOffset();
-            heldItem.transform.localRotation = Quaternion.Euler(item.GetComponent<Ingredient>().GetHandRotationOffset());
-            Debug.Log("Held item: " + heldItem.name);
+            heldItem.transform.localPosition = item.GetComponent<IPickable>().GetHandPositionOffset();
+            heldItem.transform.localRotation = Quaternion.Euler(item.GetComponent<IPickable>().GetHandRotationOffset());
         }
-        else Debug.Log("Item is not pickable");
 
     }
     public void Remove() {
@@ -35,7 +34,6 @@ public class PlayerHand : MonoBehaviour
             Destroy(heldItem);
             heldItem.transform.SetParent(null);
             heldItem = null;
-            Debug.Log("Removed item from hand.");
         }
     }
 
@@ -44,7 +42,6 @@ public class PlayerHand : MonoBehaviour
         {
             heldItem.transform.SetParent(null);
             heldItem = null;
-            Debug.Log("Dropped item from hand.");
         }
     }
     public void MoveItemUpDown() {

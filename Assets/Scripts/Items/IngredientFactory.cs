@@ -10,7 +10,6 @@ public class IngredientFactory : MonoBehaviour, IInteractable
     {
         if (prefab == null)
         {
-            Debug.LogError("No ingredient prefab assigned!");
             return;
         }
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
@@ -19,7 +18,6 @@ public class IngredientFactory : MonoBehaviour, IInteractable
             return;
         }
 
-        Debug.Log("grabbing item...");
 
         Vector3 spawnPosition = transform.position + transform.forward * 0.5f + Vector3.up * 0.3f;
         GameObject spawned = Instantiate(prefab, spawnPosition, Quaternion.identity);
@@ -27,7 +25,6 @@ public class IngredientFactory : MonoBehaviour, IInteractable
         Ingredient ingredient = spawned.GetComponent<Ingredient>();
         if (ingredient != null)
         {
-            Debug.Log("Spawned Ingredient: " + ingredient.GetIngredientName());
             playerHand.PickUp(spawned);
         }
 

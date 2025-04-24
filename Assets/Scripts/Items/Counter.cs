@@ -21,12 +21,8 @@ public class Counter : MonoBehaviour, IInteractable
                     Debug.Log("Item placed on counter");
                     GameObject counter = gameObject;
                     Vector3 counterRotation = counter.transform.rotation.eulerAngles;
-                    float counterOffset = 0f;
-                    Vector3 defaultRotation = item.GetComponent<Ingredient>().GetDefaultRotation(); // Get the default rotation of the ingredient
-                    if(item.CompareTag("Ingredient"))
-                    {
-                        counterOffset = item.GetComponent<Ingredient>().GetCounterPositionOffset(); // Adjust this value as needed for ingredient items
-                    }
+                    float counterOffset = item.GetComponent<IPickable>().GetCounterPositionOffset();;
+                    Vector3 defaultRotation = item.GetComponent<IPickable>().GetDefaultRotation(); // Get the default rotation of the ingredient
                     playerHand.Drop();
                     item.transform.position = new Vector3(hitCoordinates.x, hitCoordinates.y, hitCoordinates.z); // Adjust the height as needed
                     // item.transform.position = new Vector3(hitCoordinates.x, hitCoordinates.y + counterOffset, hitCoordinates.z); // Adjust the height as needed

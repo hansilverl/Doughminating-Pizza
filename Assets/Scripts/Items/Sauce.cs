@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sauce : Ingredient, IPickable
+public class Sauce : Ingredient
 {
     // public override void Interact() {
 
