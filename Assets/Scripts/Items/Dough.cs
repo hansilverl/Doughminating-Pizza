@@ -6,11 +6,30 @@ public class Dough : Ingredient
 {
     public override void Interact()
     {
-        base.Interact();
+        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
+        if(playerHand != null && playerHand.IsHoldingItem)
+        {
+            GameObject held = playerHand.HeldItem;
+            Tool item = held.GetComponent<Tool>();
+            if (item != null && item is RollingPin)
+            {
+                Debug.Log("Rolling out dough");
+            }
+        }
     }
 
     public override string getInteractionText()
     {
-        return "Press 'E' to interact with " + GetIngredientName();
+        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
+        if(playerHand != null && playerHand.IsHoldingItem)
+        {
+            GameObject held = playerHand.HeldItem;
+            Tool item = held.GetComponent<Tool>();
+            if (item != null && item is RollingPin)
+            {
+                return "Press 'E' to roll out " + this.GetIngredientName();
+            }
+        }
+        return "";
     }
 }
