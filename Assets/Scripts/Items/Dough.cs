@@ -16,6 +16,9 @@ public class Dough : Ingredient
                 Debug.Log("Rolling out dough");
             }
         }
+        else {
+            base.Interact();
+        }
     }
 
     public override string getInteractionText()
@@ -30,6 +33,6 @@ public class Dough : Ingredient
                 return "Press 'E' to roll out " + this.GetIngredientName();
             }
         }
-        return "";
+        return "Pick up " + this.GetIngredientName();
     }
 }
