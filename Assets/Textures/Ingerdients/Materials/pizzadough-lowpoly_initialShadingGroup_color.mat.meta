@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Materials/Ingerdients/Materials/pizzadough-lowpoly_initialShadingGroup_color.mat.meta
+guid: 429329b4abf744c7ca7779adccecc449
+=======
 guid: 66e120a1576e25245b398a1edd8e80af
+>>>>>>> origin/main:Assets/Textures/Ingerdients/Materials/pizzadough-lowpoly_initialShadingGroup_color.mat.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
