@@ -5,6 +5,7 @@ using UnityEngine;
 public class Cheese : Ingredient
 {
     public override void Interact() {
+        base.Interact();
     }
 
     public override string getInteractionText() {
