@@ -20,8 +20,8 @@ public class Pizza : Ingredient
             Ingredient ingredient = held.GetComponent<Ingredient>();
             if (ingredient != null)
             {
-                if(this.CookLevel != CookState.Raw) return; // Cannot add ingredients to a cooked pizza
-                
+                if (this.CookLevel != CookState.Raw) return; // Cannot add ingredients to a cooked pizza
+
                 if (ingredient is Sauce)
                 {
                     if (!hasSauce)
@@ -66,6 +66,19 @@ public class Pizza : Ingredient
         // Update the object model based on the current state of the pizza
         // This could involve changing the appearance of the pizza based on its ingredients and cook level
         // For example, you might want to change the texture or model of the pizza to reflect its state
+    }
+
+    void Cook()
+    {
+        if (this.CookLevel == CookState.Raw)
+        {
+            this.CookLevel = CookState.Cooked;
+        }
+        else if (this.CookLevel == CookState.Cooked)
+        {
+            this.CookLevel = CookState.Burnt;
+        }
+        updateObjectModel();
     }
 
     public override string getInteractionText()
