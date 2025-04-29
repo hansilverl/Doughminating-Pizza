@@ -11,20 +11,80 @@ public class Pizza : Ingredient
     [SerializeField] private bool hasCheese = false;
     [SerializeField] private HashSet<Ingredient> ingredients = new HashSet<Ingredient>();
 
-    public override void Interact() {
-        
+    public override void Interact()
+    {
+        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
+        if (playerHand != null && playerHand.IsHoldingItem)
+        {
+            GameObject held = playerHand.HeldItem;
+            Ingredient ingredient = held.GetComponent<Ingredient>();
+            if (ingredient != null)
+            {
+                if(this.CookLevel != CookState.Raw) return; // Cannot add ingredients to a cooked pizza
+                
+                if (ingredient is Sauce)
+                {
+                    if (!hasSauce)
+                    {
+                        hasSauce = true;
+                        playerHand.Remove();
+                        AddIngredient(ingredient);
+                    }
+                    else
+                    {
+                        Debug.Log("Pizza already has sauce!");
+                    }
+                }
+                else if (ingredient is Cheese)
+                {
+                    if (!hasCheese)
+                    {
+                        hasCheese = true;
+                        playerHand.Remove();
+                        AddIngredient(ingredient);
+                    }
+                    else
+                    {
+                        Debug.Log("Pizza already has cheese!");
+                    }
+                }
+                else
+                {
+                    Debug.Log("Cannot add this ingredient to the pizza!");
+                }
+                this.updateObjectModel();
+            }
+            else if (playerHand != null && !playerHand.IsHoldingItem)
+            {
+                base.Interact(); // Call the base interact method to pick up the pizza
+            }
+        }
     }
 
-    public override string getInteractionText() {
+    void updateObjectModel()
+    {
+        // Update the object model based on the current state of the pizza
+        // This could involve changing the appearance of the pizza based on its ingredients and cook level
+        // For example, you might want to change the texture or model of the pizza to reflect its state
+    }
+
+    public override string getInteractionText()
+    {
         return "Press 'E' to interact with " + GetIngredientName();
     }
 
-    public void AddIngredient(Ingredient ingredient) {
-        if (ingredient is Sauce) {
+    public void AddIngredient(Ingredient ingredient)
+    {
+        if (ingredient is Sauce)
+        {
             this.hasSauce = true;
-        } else if (ingredient is Cheese) {
+        }
+        else if (ingredient is Cheese)
+        {
             this.hasCheese = true;
-        } else {
+        }
+        else
+        {
             ingredients.Add(ingredient);
         }
     }

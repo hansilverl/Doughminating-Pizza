@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Tomato : Ingredient
 {
-    public override void Interact()
-    {
-        base.Interact();
-    }
 
     public override string getInteractionText()
     {
