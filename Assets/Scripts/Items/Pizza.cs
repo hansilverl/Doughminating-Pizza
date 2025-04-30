@@ -15,6 +15,15 @@ public class Pizza : Ingredient
         
     }
 
+    public CookState GetCookState() => CookLevel;
+
+    public void SetCookState(CookState state)
+{
+    this.CookLevel = state;
+    Debug.Log($"Pizza is now {state}");
+}
+
+
     public override string getInteractionText() {
         return "Press 'E' to interact with " + GetIngredientName();
     }
