@@ -72,7 +72,7 @@ public class Blender : Tool
             Ingredient ingredient = held.GetComponent<Ingredient>();
             if (ingredient != null && ingredient is Tomato)
             {
-                return "Press 'E' to blend " + ingredient.GetIngredientName();
+                return "Blend " + ingredient.GetIngredientName();
             }
         }
 

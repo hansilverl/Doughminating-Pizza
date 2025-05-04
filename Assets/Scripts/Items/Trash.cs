@@ -22,6 +22,16 @@ public class Trash : MonoBehaviour, IInteractable
 
     public string getInteractionText()
     {
-        return "Press 'E' to trash item";
+        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
+        if (playerHand != null && playerHand.IsHoldingItem)
+        {
+            GameObject held = playerHand.HeldItem;
+            Ingredient ingredient = held.GetComponent<Ingredient>();
+            if (ingredient != null)
+            {
+                return "Trash " + ingredient.GetIngredientName();
+            }
+        }
+        return "";
     }
 }

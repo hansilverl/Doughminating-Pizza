@@ -85,8 +85,8 @@ public class IngredientFactory : MonoBehaviour, IInteractable
         Ingredient ingredient = prefab.GetComponent<Ingredient>();
         if (ingredient != null)
         {
-            return "Press 'E' to grab a " + ingredient.GetIngredientName();
+            return "Grab " + ingredient.GetIngredientName();
         }
-        return "Press 'E' to grab an ingredient";
+        return "Grab an ingredient";
     }
 }

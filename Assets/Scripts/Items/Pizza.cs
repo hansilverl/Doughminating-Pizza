@@ -83,7 +83,7 @@ public class Pizza : Ingredient
 
     public override string getInteractionText()
     {
-        return "Press 'E' to interact with " + GetIngredientName();
+        return "Pick " + GetIngredientName();
     }
 
     public void AddIngredient(Ingredient ingredient)

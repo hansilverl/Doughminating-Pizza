@@ -43,7 +43,7 @@ public class Counter : MonoBehaviour, IInteractable
     {
         if (GameObject.FindWithTag("Player").GetComponent<PlayerHand>().IsHoldingItem)
         {
-            return "Press 'E' to place item on counter";
+            return "Place item";
         }
         return "";
     }

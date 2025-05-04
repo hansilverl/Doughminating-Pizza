@@ -30,9 +30,9 @@ public class Dough : Ingredient
             Tool item = held.GetComponent<Tool>();
             if (item != null && item is RollingPin)
             {
-                return "Press 'E' to roll out " + this.GetIngredientName();
+                return "Roll out " + this.GetIngredientName();
             }
         }
-        return "Pick up " + this.GetIngredientName();
+        return "Pick " + this.GetIngredientName();
     }
 }
