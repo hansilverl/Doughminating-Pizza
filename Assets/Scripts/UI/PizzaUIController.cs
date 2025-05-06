@@ -5,12 +5,18 @@ using Unity.VectorGraphics;
 
 public class PizzaUIController : MonoBehaviour
 {
+
+    private Transform player;
+    private Transform panel;
     private UnityEngine.UI.Image cookCircle;
     private SVGImage sauce;
     private SVGImage cheese;
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        panel = transform.Find("Panel");
+
         Transform cookCircleTransform = transform.Find("Panel/CookCircle");
         Transform sauceTransform = transform.Find("Panel/Sauce");
         if (sauceTransform != null)
@@ -37,6 +43,12 @@ public class PizzaUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (player != null && panel != null)
+        {
+            // Face away from the player only on Y axis (e.g., horizontal rotation)
+            Vector3 lookDirection = panel.position - player.position;
+            lookDirection.y = 0; // Remove vertical tilt if desired
+            panel.forward = lookDirection.normalized;
+        }
     }
 }
