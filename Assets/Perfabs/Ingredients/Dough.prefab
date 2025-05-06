@@ -66,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4392f00e6305b1b4db9995cce9e33f01,
         type: 3}
       propertyPath: m_Name
-      value: Dough Variant
+      value: Dough
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4392f00e6305b1b4db9995cce9e33f01,
         type: 3}
@@ -104,11 +104,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f3c54ec2cf41941bb553106b6cf6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientName: Raw Dough
   handPositionOffset: {x: 0, y: 0, z: 0.5}
   handRotationOffset: {x: 0, y: 70, z: -40}
   defaultRotation: {x: 0, y: 70, z: 0}
   counterPositionOffset: 0
+  ingredientName: Raw Dough
+  pizzaPrefab: {fileID: 7697652906340743626, guid: dd02c6a21a04843498dd9aada1bef58d,
+    type: 3}
 --- !u!136 &469354612792703594
 CapsuleCollider:
   m_ObjectHideFlags: 0

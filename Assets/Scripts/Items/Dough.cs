@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class Dough : Ingredient
 {
+    [SerializeField] private GameObject pizzaPrefab;
     public override void Interact()
     {
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
-        if(playerHand != null && playerHand.IsHoldingItem)
+        if (playerHand != null && playerHand.IsHoldingItem)
         {
             GameObject held = playerHand.HeldItem;
             Tool item = held.GetComponent<Tool>();
             if (item != null && item is RollingPin)
             {
                 Debug.Log("Rolling out dough");
+                Debug.Log(this.gameObject.transform.localPosition);
+                GameObject pizza = Instantiate(pizzaPrefab, this.gameObject.transform.position, Quaternion.identity);
+                pizza.transform.SetParent(this.gameObject.transform.parent);
+                Vector3 defaultRotation = pizza.GetComponent<IPickable>().GetDefaultRotation();
+                pizza.transform.localRotation = Quaternion.Euler(defaultRotation.x, defaultRotation.y, defaultRotation.z);
+                Destroy(this.gameObject);
             }
         }
         else {
@@ -24,7 +31,7 @@ public class Dough : Ingredient
     public override string getInteractionText()
     {
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
-        if(playerHand != null && playerHand.IsHoldingItem)
+        if (playerHand != null && playerHand.IsHoldingItem)
         {
             GameObject held = playerHand.HeldItem;
             Tool item = held.GetComponent<Tool>();

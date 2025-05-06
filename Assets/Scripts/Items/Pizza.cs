@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Pizza : Ingredient
 {
+    [SerializeField] private GameObject pizzaUI;
     [SerializeField] private CookState CookLevel = CookState.Raw;
     // Time in seconds to cook the pizza
 
@@ -54,10 +55,10 @@ public class Pizza : Ingredient
                 }
                 this.updateObjectModel();
             }
-            else if (playerHand != null && !playerHand.IsHoldingItem)
-            {
-                base.Interact(); // Call the base interact method to pick up the pizza
-            }
+        }
+        else if (playerHand != null && !playerHand.IsHoldingItem)
+        {
+            base.Interact(); // Call the base interact method to pick up the pizza
         }
     }
 
