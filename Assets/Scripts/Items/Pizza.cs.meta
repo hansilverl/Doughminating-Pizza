@@ -3,7 +3,9 @@ guid: 42ef064fecb7448d29f95dfeff0a3471
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - pizzaUI: {fileID: 5021707866343000039, guid: 681795a99e60d6e40853df996a3487e6,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
