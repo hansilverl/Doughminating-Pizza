@@ -11,6 +11,9 @@ public class PizzaUIController : MonoBehaviour
     private UnityEngine.UI.Image cookCircle;
     private SVGImage sauce;
     private SVGImage cheese;
+    private SVGImage bacon;
+    private SVGImage pineapple;
+    private SVGImage pepperoni;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +40,35 @@ public class PizzaUIController : MonoBehaviour
                 cheese.color = new Color(cheese.color.r, cheese.color.g, cheese.color.b, 0f); // Keep current color and make fully transparent
             }
         }
+        
+        Transform baconTransform = transform.Find("Panel/Bacon");
+        if (baconTransform != null)
+        {
+            bacon = baconTransform.GetComponent<SVGImage>();
+            if (bacon != null)
+            {
+                bacon.color = new Color(bacon.color.r, bacon.color.g, bacon.color.b, 0f); // Keep current color and make fully transparent
+            }
+        }
+        Transform pineappleTransform = transform.Find("Panel/Pineapple");
+        if (pineappleTransform != null)
+        {
+            pineapple = pineappleTransform.GetComponent<SVGImage>();
+            if (pineapple != null)
+            {
+                pineapple.color = new Color(pineapple.color.r, pineapple.color.g, pineapple.color.b, 0f); // Keep current color and make fully transparent
+            }
+        }
+        
+        Transform pepperoniTransform = transform.Find("Panel/Pepperoni");
+        if (pepperoniTransform != null)
+        {
+            pepperoni = pepperoniTransform.GetComponent<SVGImage>();
+            if (pepperoni != null)
+            {
+                pepperoni.color = new Color(pepperoni.color.r, pepperoni.color.g, pepperoni.color.b, 0f); // Keep current color and make fully transparent
+            }
+        }
         Debug.Log("PizzaUIController started");
     }
 
@@ -49,6 +81,24 @@ public class PizzaUIController : MonoBehaviour
             Vector3 lookDirection = panel.position - player.position;
             lookDirection.y = 0; // Remove vertical tilt if desired
             panel.forward = lookDirection.normalized;
+        }
+    }
+
+    public void addIngredient(Ingredient ingredient)
+    {
+        if (ingredient is Sauce)
+        {
+            if (sauce != null)
+            {
+                sauce.color = new Color(sauce.color.r, sauce.color.g, sauce.color.b, 1f); // Make fully opaque
+            }
+        }
+        else if (ingredient is Cheese)
+        {
+            if (cheese != null)
+            {
+                cheese.color = new Color(cheese.color.r, cheese.color.g, cheese.color.b, 1f); // Make fully opaque
+            }
         }
     }
 }

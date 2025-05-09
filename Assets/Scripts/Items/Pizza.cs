@@ -22,26 +22,8 @@ public class Pizza : Ingredient
             GameObject uiInstance = Instantiate(pizzaUI);
             uiInstance.transform.SetParent(this.transform); // Parent to pizza in world space
             uiInstance.transform.localPosition = new Vector3(0, 0, 1) * 1f; // Offset above the pizza
+            pizzaUI = uiInstance;
         }
-        // {
-        //     uiInstance.transform.SetParent(this.transform, false); // Parent to pizza in world space
-        //     pizzaUI = uiInstance;
-
-        //     // Fix local transform to avoid scale/rotation issues
-        //     RectTransform rt = pizzaUI.GetComponent<RectTransform>();
-        //     if (rt != null)
-        //     {
-        //         rt.localScale = Vector3.one;
-        //         rt.localRotation = Quaternion.identity;
-        //         rt.localPosition = Vector3.up * 2f; // Offset above the pizza
-        //     }
-        //     else
-        //     {
-        //         // Fallback if it's not a UI element
-        //         pizzaUI.transform.localPosition = Vector3.up * 2f;
-        //         pizzaUI.transform.localRotation = Quaternion.identity;
-        //         pizzaUI.transform.localScale = Vector3.one;
-        //     }
     }
 
     public override void Interact()
@@ -121,17 +103,6 @@ public class Pizza : Ingredient
 
     public void AddIngredient(Ingredient ingredient)
     {
-        if (ingredient is Sauce)
-        {
-            this.hasSauce = true;
-        }
-        else if (ingredient is Cheese)
-        {
-            this.hasCheese = true;
-        }
-        else
-        {
-            ingredients.Add(ingredient);
-        }
+        pizzaUI.GetComponent<PizzaUIController>().addIngredient(ingredient);
     }
 }
