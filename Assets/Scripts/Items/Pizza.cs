@@ -10,7 +10,17 @@ public class Pizza : Ingredient
 
     [SerializeField] private bool hasSauce = false;
     [SerializeField] private bool hasCheese = false;
+    [SerializeField] private bool hasBacon = false;
+    [SerializeField] private bool hasPineapple = false;
+    [SerializeField] private bool hasPepperoni = false;
     [SerializeField] private HashSet<Ingredient> ingredients = new HashSet<Ingredient>();
+
+    // Public properties to access ingredient states
+    public bool HasSauce => hasSauce;
+    public bool HasCheese => hasCheese;
+    public bool HasBacon => hasBacon;
+    public bool HasPineapple => hasPineapple;
+    public bool HasPepperoni => hasPepperoni;
 
     void Start()
     {
@@ -37,37 +47,43 @@ public class Pizza : Ingredient
             {
                 if (this.CookLevel != CookState.Raw) return; // Cannot add ingredients to a cooked pizza
 
-                if (ingredient is Sauce)
+                bool ingredientAdded = false;
+                if (ingredient is Sauce && !hasSauce)
                 {
-                    if (!hasSauce)
-                    {
-                        hasSauce = true;
-                        playerHand.Remove();
-                        AddIngredient(ingredient);
-                    }
-                    else
-                    {
-                        Debug.Log("Pizza already has sauce!");
-                    }
+                    hasSauce = true;
+                    ingredientAdded = true;
                 }
-                else if (ingredient is Cheese)
+                else if (ingredient is Cheese && !hasCheese)
                 {
-                    if (!hasCheese)
-                    {
-                        hasCheese = true;
-                        playerHand.Remove();
-                        AddIngredient(ingredient);
-                    }
-                    else
-                    {
-                        Debug.Log("Pizza already has cheese!");
-                    }
+                    hasCheese = true;
+                    ingredientAdded = true;
+                }
+                else if (ingredient is Bacon && !hasBacon)
+                {
+                    hasBacon = true;
+                    ingredientAdded = true;
+                }
+                else if (ingredient is Pineapple && !hasPineapple)
+                {
+                    hasPineapple = true;
+                    ingredientAdded = true;
+                }
+                else if (ingredient is Pepperoni && !hasPepperoni)
+                {
+                    hasPepperoni = true;
+                    ingredientAdded = true;
+                }
+
+                if (ingredientAdded)
+                {
+                    playerHand.Remove();
+                    AddIngredient(ingredient);
+                    updateObjectModel();
                 }
                 else
                 {
-                    Debug.Log("Cannot add this ingredient to the pizza!");
+                    Debug.Log($"Cannot add {ingredient.GetType().Name} to the pizza!");
                 }
-                this.updateObjectModel();
             }
         }
         else if (playerHand != null && !playerHand.IsHoldingItem)

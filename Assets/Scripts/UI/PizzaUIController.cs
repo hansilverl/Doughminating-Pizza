@@ -100,5 +100,26 @@ public class PizzaUIController : MonoBehaviour
                 cheese.color = new Color(cheese.color.r, cheese.color.g, cheese.color.b, 1f); // Make fully opaque
             }
         }
+        else if (ingredient is Bacon)
+        {
+            if (bacon != null)
+            {
+                bacon.color = new Color(bacon.color.r, bacon.color.g, bacon.color.b, 1f); // Make fully opaque
+            }
+        }
+        else if (ingredient is Pineapple)
+        {
+            if (pineapple != null)
+            {
+                pineapple.color = new Color(pineapple.color.r, pineapple.color.g, pineapple.color.b, 1f); // Make fully opaque
+            }
+        }
+        else if (ingredient is Pepperoni)
+        {
+            if (pepperoni != null)
+            {
+                pepperoni.color = new Color(pepperoni.color.r, pepperoni.color.g, pepperoni.color.b, 1f); // Make fully opaque
+            }
+        }
     }
 }
