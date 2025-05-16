@@ -112,6 +112,14 @@ public class Pizza : Ingredient
         updateObjectModel();
     }
 
+    // Method to set the cook state from Oven class
+    public void SetCookState(CookState newState)
+    {
+        CookLevel = newState;
+        Debug.Log($"Pizza cook state changed to: {newState}");
+        updateObjectModel();
+    }
+
     public override string getInteractionText()
     {
         return "Pick " + GetIngredientName();
