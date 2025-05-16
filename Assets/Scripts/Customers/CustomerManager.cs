@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class CustomerManager : MonoBehaviour   // класс и файл с одинаковым именем
 {
+    [Header("Doors")]
+    public Transform entryDoor;    // сюда заходят
+    public Transform exitDoor;     // от сюда уходят
+    
     [Header("Seats & Spawning")]
     public Transform[] seatTransforms;         // 4 точки «стульев»
     public GameObject customerPrefab;          // префаб с CustomerController
@@ -47,13 +51,15 @@ public class CustomerManager : MonoBehaviour   // класс и файл с од
 
     void SpawnCustomerAtSeat(int seatIndex)
     {
-        Vector3 spawnPos = seatTransforms[seatIndex].position;
-        spawnPos.x += spawnXOffset;
+        Vector3 spawnPos = entryDoor.position;
 
         GameObject go = Instantiate(customerPrefab, spawnPos, Quaternion.identity);
         var ctrl = go.GetComponent<CustomerController>();
-        ctrl.mySeat     = seatIndex;
+        ctrl.mySeat      = seatIndex;
         ctrl.destination = seatTransforms[seatIndex].position;
+        // передаём двери
+        ctrl.entryPoint  = entryDoor;
+        ctrl.exitPoint   = exitDoor;
 
         availableSeatForCustomers[seatIndex] = false;
     }

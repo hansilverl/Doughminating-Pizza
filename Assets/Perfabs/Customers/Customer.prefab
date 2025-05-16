@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 3237481180500922799}
   m_Layer: 0
   m_Name: Customer
-  m_TagString: Untagged
+  m_TagString: Customer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -227,7 +227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b81ba995db494ba4580bea1dd6f3b6cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customerPatience: 15
+  entryPoint: {fileID: 0}
+  exitPoint: {fileID: 0}
+  customerPatience: 5
   customerMoveSpeed: 3
   showProductIngredientHelpers: 1
   orderIsOkSfx: {fileID: 0}

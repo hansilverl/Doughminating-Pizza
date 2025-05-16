@@ -11,6 +11,9 @@ public class CustomerController : MonoBehaviour
     // This class manages all things related to a customer, including
     // wishlist, ingredients, patience and animations.
     //***************************************************************************//
+    
+    public Transform entryPoint;    // из чего спавнимся
+    public Transform exitPoint;     // куда уходим
 
     // Modifiable variables (Only Through Inspector - Do not hardcode!)
     public float customerPatience = 30.0f;              // seconds (default = 30)
@@ -75,6 +78,14 @@ public class CustomerController : MonoBehaviour
     void Awake()
     {
         manager = FindObjectOfType<CustomerManager>();
+        
+        startingPosition = entryPoint != null 
+            ? entryPoint.position 
+            : transform.position;
+        transform.position = startingPosition;
+
+        // Make sure the customer has the correct tag for door triggers
+        gameObject.tag = "Customer";
 
         requestBubble.SetActive(false);
         patienceBarFG.SetActive(false);
@@ -97,8 +108,6 @@ public class CustomerController : MonoBehaviour
         barInitialScaleX = patienceBarBG.transform.localScale.x;
         barInitialPos = patienceBarBG.transform.localPosition;
 
-        // Initialize starting position
-        startingPosition = transform.position;
 
         Init();
         StartCoroutine(goToSeat());
@@ -174,28 +183,25 @@ public class CustomerController : MonoBehaviour
     // and then goes to its position (seat) with a nice animation.
     //***************************************************************************//
     private float timeVariance;
+    
     IEnumerator goToSeat()
     {
-        timeVariance = Random.value;
-        while (!isOnSeat)
+        // Пока не подошли к «стулу»
+        while (Vector3.Distance(transform.position, destination) > 0.1f)
         {
-            transform.position = new Vector3(
-                transform.position.x + (Time.deltaTime * customerMoveSpeed),
-                startingPosition.y + (Mathf.Sin((Time.time + timeVariance) * 10) / 8),
-                transform.position.z
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                destination,
+                customerMoveSpeed * Time.deltaTime
             );
-
-            if (transform.position.x >= destination.x)
-            {
-                isOnSeat              = true;
-                patienceBarSliderFlag = true;
-                requestBubble.SetActive(true);
-                patienceBarFG.SetActive(true);
-                patienceBarBG.SetActive(true);
-                yield break;
-            }
-            yield return 0;
+            yield return null;
         }
+        // Как только сели — запускаем UI и выходим
+        isOnSeat              = true;
+        patienceBarSliderFlag = true;
+        requestBubble.SetActive(true);
+        patienceBarFG.SetActive(true);
+        patienceBarBG.SetActive(true);
     }
 
     void Update()
@@ -363,31 +369,45 @@ public class CustomerController : MonoBehaviour
         if (isLeaving) yield break;
         isLeaving = true;
 
-        // Animate (close) patience bar
+        // анимации закрытия UI…
         StartCoroutine(animate(Time.time, patienceBarBG, 0.7f, 0.8f));
-        yield return new WaitForSeconds(0.3f);
-
-        // Animate (close) request bubble
+        yield return new WaitForSeconds(0.3f);  
         StartCoroutine(animate(Time.time, requestBubble, 0.75f, 0.95f));
         yield return new WaitForSeconds(0.4f);
 
-        // Animate main object (hide it, then destroy it)
-        while (transform.position.x < 10)
+        // First move to the door position to ensure we trigger the door collider
+        Vector3 doorPosition = exitPoint != null ? exitPoint.position : transform.position + Vector3.right * 10f;
+        
+        // Move to the door
+        while (Vector3.Distance(transform.position, doorPosition) > 0.1f)
         {
-            transform.position = new Vector3(
-                transform.position.x + (Time.deltaTime * customerMoveSpeed),
-                startingPosition.y + (Mathf.Sin(Time.time * 10) / 8),
-                transform.position.z
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                doorPosition,
+                customerMoveSpeed * Time.deltaTime
             );
-
-            if (transform.position.x >= 10)
-            {
-                Destroy(gameObject);
-                yield break;
-            }
-            yield return 0;
+            yield return null;
         }
+        
+        // Small pause at the door to ensure trigger detection
+        yield return new WaitForSeconds(0.2f);
+
+        // Then move fully outside (off-screen)
+        Vector3 offScreenPosition = doorPosition + ((doorPosition - transform.position).normalized * 10f);
+        
+        while (Vector3.Distance(transform.position, offScreenPosition) > 0.1f)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                offScreenPosition,
+                customerMoveSpeed * Time.deltaTime
+            );
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
+
 
     //***************************************************************************//
     // Animate customer UI elements
