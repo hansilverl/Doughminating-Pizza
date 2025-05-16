@@ -12,8 +12,8 @@ public class CustomerController : MonoBehaviour
     // wishlist, ingredients, patience and animations.
     //***************************************************************************//
     
-    public Transform entryPoint;    // из чего спавнимся
-    public Transform exitPoint;     // куда уходим
+    public Transform entryPoint;    // what do we spawn from
+    public Transform exitPoint;     // where are we going
 
     // Modifiable variables (Only Through Inspector - Do not hardcode!)
     public float customerPatience = 30.0f;              // seconds (default = 30)
@@ -186,7 +186,7 @@ public class CustomerController : MonoBehaviour
     
     IEnumerator goToSeat()
     {
-        // Пока не подошли к «стулу»
+        // Until we got to the "chair"
         while (Vector3.Distance(transform.position, destination) > 0.1f)
         {
             transform.position = Vector3.MoveTowards(
@@ -196,7 +196,7 @@ public class CustomerController : MonoBehaviour
             );
             yield return null;
         }
-        // Как только сели — запускаем UI и выходим
+        // As soon as we sit down, we launch the UI and exit
         isOnSeat              = true;
         patienceBarSliderFlag = true;
         requestBubble.SetActive(true);
@@ -241,17 +241,17 @@ public class CustomerController : MonoBehaviour
             currentCustomerPatience -= Time.deltaTime;
             float ratio = Mathf.Clamp01(currentCustomerPatience / customerPatience);
 
-            // Вычисляем новый scale X
+            // Calculate new scale X
             float newScaleX = barInitialScaleX * ratio;
 
-            // Применяем scale к BG (шторке)
+            // Apply scale to BG (curtain)
             patienceBarBG.transform.localScale = new Vector3(
                 newScaleX,
                 patienceBarBG.transform.localScale.y,
                 patienceBarBG.transform.localScale.z
             );
 
-            // Сдвигаем шторку вправо, чтобы правый край оставался на месте
+            // Move the curtain to the right so that the right edge stays in place
             float delta = (newScaleX - barInitialScaleX) * 0.5f;
             patienceBarBG.transform.localPosition = new Vector3(
                 barInitialPos.x - delta,
@@ -276,7 +276,7 @@ public class CustomerController : MonoBehaviour
     {
         currentCustomerPatience = customerPatience;
         patienceBarFG.SetActive(true);
-        // сброс масштаба в полный размер
+        // reset scale to full size
         patienceBarFG.transform.localScale = new Vector3(1f,
             patienceBarFG.transform.localScale.y,
             patienceBarFG.transform.localScale.z);
@@ -369,7 +369,7 @@ public class CustomerController : MonoBehaviour
         if (isLeaving) yield break;
         isLeaving = true;
 
-        // анимации закрытия UI…
+        // UI closing animations…
         StartCoroutine(animate(Time.time, patienceBarBG, 0.7f, 0.8f));
         yield return new WaitForSeconds(0.3f);  
         StartCoroutine(animate(Time.time, requestBubble, 0.75f, 0.95f));

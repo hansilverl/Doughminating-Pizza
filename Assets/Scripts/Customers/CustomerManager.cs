@@ -1,15 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-public class CustomerManager : MonoBehaviour   // класс и файл с одинаковым именем
+public class CustomerManager : MonoBehaviour   // class and file with the same name
 {
     [Header("Doors")]
-    public Transform entryDoor;    // сюда заходят
-    public Transform exitDoor;     // от сюда уходят
+    public Transform entryDoor;    // people come here
+    public Transform exitDoor;     // leave from here
     
     [Header("Seats & Spawning")]
-    public Transform[] seatTransforms;         // 4 точки «стульев»
-    public GameObject customerPrefab;          // префаб с CustomerController
+    public Transform[] seatTransforms;         // "chairs" points
+    public GameObject customerPrefab;          // prefab with CustomerController
     public float spawnXOffset = -10f;
     public float spawnInterval = 1f;
 
@@ -32,19 +32,19 @@ public class CustomerManager : MonoBehaviour   // класс и файл с од
     {
         while (true)
         {
-            // найдём _первое_ свободное место
+            // find the _first_ free space
             for (int i = 0; i < seatTransforms.Length; i++)
             {
                 if (availableSeatForCustomers[i])
                 {
                     SpawnCustomerAtSeat(i);
-                    // после спауна ждём ровно столько, сколько указано в инспекторе
+                    // after spawning we wait exactly as long as specified in the inspector
                     yield return new WaitForSeconds(spawnInterval);
-                    // выходим из цикла, чтобы за раз спаунить только одного
+                    // break out of the loop to spawn only one at a time
                     break;
                 }
             }
-            // сразу же на следующей итерации снова ищем свободное место
+            // immediately on the next iteration we look for free space again
             yield return null;
         }
     }
@@ -57,7 +57,7 @@ public class CustomerManager : MonoBehaviour   // класс и файл с од
         var ctrl = go.GetComponent<CustomerController>();
         ctrl.mySeat      = seatIndex;
         ctrl.destination = seatTransforms[seatIndex].position;
-        // передаём двери
+        // we pass the doors
         ctrl.entryPoint  = entryDoor;
         ctrl.exitPoint   = exitDoor;
 

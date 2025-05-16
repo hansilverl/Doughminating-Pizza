@@ -13,11 +13,11 @@ public class MenuController : MonoBehaviour
     private RaycastHit hitInfo;
     private Ray ray;
     
-    // public GameObject playerRecord; Личный рекорд
+    // public GameObject playerRecord; Personal best
     
     void Awake()
     {
-        // TODO: Добавть личный рекород игрока (Нужен префаб)
+        // TODO: Add player's personal record (Need prefab)
     }
     
     void Update()

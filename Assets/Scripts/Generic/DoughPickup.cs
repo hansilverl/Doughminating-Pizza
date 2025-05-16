@@ -15,8 +15,8 @@ public class DoughPickup : MonoBehaviour
             rb = gameObject.AddComponent<Rigidbody>();
         }
 
-        rb.useGravity = false;     // Пока тесто не взято – не падает
-        rb.isKinematic = true;     // Не участвует в физике до отпускания
+        rb.useGravity = false;     // Until the dough is taken, it does not fall
+        rb.isKinematic = true;     // Does not participate in physics until released
     }
 
     void OnMouseDown()
@@ -45,7 +45,7 @@ public class DoughPickup : MonoBehaviour
                 rb.isKinematic = false;
                 rb.useGravity = true;
 
-                Debug.Log("Тесто отпущено и падает.");
+                Debug.Log("The dough is released and falls.");
             }
         }
     }

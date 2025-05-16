@@ -6,18 +6,18 @@ namespace SojaExiles
     public class opencloseDoor : MonoBehaviour
     {
         public Animator openandclose;
-        public float closeDelay = 0.5f;  // задержка перед закрытием
+        public float closeDelay = 0.5f;  // delay before closing
         
         private Coroutine closeRoutine;
 
         void OnTriggerEnter(Collider other)
         {
-            // Если в триггер вошёл клиент
+            // If a client entered the trigger
             if (other.CompareTag("Customer"))
             {
-                // Открываем дверь сразу
+                // Open the door immediately
                 openandclose.Play("Opening");
-                // Отменяем запланированное закрытие, если было
+                // Cancel the scheduled closure if there was one
                 if (closeRoutine != null)
                     StopCoroutine(closeRoutine);
             }
@@ -25,10 +25,10 @@ namespace SojaExiles
 
         void OnTriggerExit(Collider other)
         {
-            // Когда клиент вышел из области двери
+            // When the client exits the door area
             if (other.CompareTag("Customer"))
             {
-                // Запускаем отложенное закрытие
+                // Start delayed closing
                 closeRoutine = StartCoroutine(CloseAfterDelay());
             }
         }
