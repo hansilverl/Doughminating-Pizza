@@ -15,7 +15,6 @@ public class CustomerController : MonoBehaviour
     // Modifiable variables (Only Through Inspector - Do not hardcode!)
     public float customerPatience = 30.0f;              // seconds (default = 30)
     public float customerMoveSpeed = 3f;
-    public GameObject positionDummy;                    // dummy to indicate where items should be displayed over customer's head
     public bool showProductIngredientHelpers = true;    // whether to show customer wish's ingredients as a helper or not
 
     // Audio Clips
@@ -37,8 +36,18 @@ public class CustomerController : MonoBehaviour
     // UI Elements
     public GameObject patienceBarFG;
     public GameObject patienceBarBG;
+    
+    private float barInitialScaleX;
+    private Vector3 barInitialPos;
+    
     public GameObject requestBubble;
     public GameObject money3dText;
+    
+    public int mySeat;
+    public Vector3 destination;
+    private CustomerManager manager;
+
+
     
     [SerializeField] private Transform iconRowTransform;
 
@@ -65,9 +74,12 @@ public class CustomerController : MonoBehaviour
 
     void Awake()
     {
+        manager = FindObjectOfType<CustomerManager>();
+
         requestBubble.SetActive(false);
         patienceBarFG.SetActive(false);
         patienceBarBG.SetActive(false);
+        
         
         if (isOnSeat)
         {
@@ -80,8 +92,13 @@ public class CustomerController : MonoBehaviour
         
         currentCustomerPatience = customerPatience;
         creationTime = Time.time;
-        startingPosition = transform.position;
         moodIndex = 0;
+        
+        barInitialScaleX = patienceBarBG.transform.localScale.x;
+        barInitialPos = patienceBarBG.transform.localPosition;
+
+        // Initialize starting position
+        startingPosition = transform.position;
 
         Init();
         StartCoroutine(goToSeat());
@@ -164,11 +181,11 @@ public class CustomerController : MonoBehaviour
         {
             transform.position = new Vector3(
                 transform.position.x + (Time.deltaTime * customerMoveSpeed),
-                startingPosition.y - 0.25f + (Mathf.Sin((Time.time + timeVariance) * 10) / 8),
+                startingPosition.y + (Mathf.Sin((Time.time + timeVariance) * 10) / 8),
                 transform.position.z
             );
 
-            if (transform.position.x >= positionDummy.transform.position.x)
+            if (transform.position.x >= destination.x)
             {
                 isOnSeat              = true;
                 patienceBarSliderFlag = true;
@@ -212,31 +229,37 @@ public class CustomerController : MonoBehaviour
     IEnumerator patienceBar()
     {
         patienceBarSliderFlag = false;
+
         while (currentCustomerPatience > 0)
         {
             currentCustomerPatience -= Time.deltaTime;
             float ratio = Mathf.Clamp01(currentCustomerPatience / customerPatience);
 
-            // Цвет
-            var rend = patienceBarFG.GetComponent<Renderer>();
-            if (rend != null)
-            {
-                rend.material.color = 
-                    ratio > 0.5f ? Color.green :
-                    ratio > 0.25f ? Color.yellow :
-                    Color.red;
-            }
+            // Вычисляем новый scale X
+            float newScaleX = barInitialScaleX * ratio;
 
-            // Масштаб по X
-            Vector3 s = patienceBarFG.transform.localScale;
-            patienceBarFG.transform.localScale = new Vector3(ratio, s.y, s.z);
+            // Применяем scale к BG (шторке)
+            patienceBarBG.transform.localScale = new Vector3(
+                newScaleX,
+                patienceBarBG.transform.localScale.y,
+                patienceBarBG.transform.localScale.z
+            );
+
+            // Сдвигаем шторку вправо, чтобы правый край оставался на месте
+            float delta = (newScaleX - barInitialScaleX) * 0.5f;
+            patienceBarBG.transform.localPosition = new Vector3(
+                barInitialPos.x - delta,
+                barInitialPos.y,
+                barInitialPos.z
+            );
 
             yield return null;
         }
 
-        patienceBarFG.SetActive(false);
+        patienceBarBG.SetActive(false);
         StartCoroutine(leave());
     }
+
 
 
 
@@ -335,6 +358,8 @@ public class CustomerController : MonoBehaviour
     //***************************************************************************//
     IEnumerator leave()
     {
+        manager.availableSeatForCustomers[mySeat] = true;
+
         if (isLeaving) yield break;
         isLeaving = true;
 
@@ -351,7 +376,7 @@ public class CustomerController : MonoBehaviour
         {
             transform.position = new Vector3(
                 transform.position.x + (Time.deltaTime * customerMoveSpeed),
-                startingPosition.y - 0.25f + (Mathf.Sin(Time.time * 10) / 8),
+                startingPosition.y + (Mathf.Sin(Time.time * 10) / 8),
                 transform.position.z
             );
 
