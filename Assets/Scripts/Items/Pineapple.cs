@@ -5,7 +5,7 @@ using UnityEngine;
 public class Pineapple : Ingredient
 {
     public override string getInteractionText() {
-        return "Press 'E' to interact with " + GetIngredientName();
+        return "Pick " + GetIngredientName();
     }
 
     // Awake happens immediately when the object is instantiated

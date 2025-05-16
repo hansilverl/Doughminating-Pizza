@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,11 +13,11 @@ public class MenuController : MonoBehaviour
     private RaycastHit hitInfo;
     private Ray ray;
     
-    // public GameObject playerRecord; Личный рекорд
+    // public GameObject playerRecord; Personal best
     
     void Awake()
     {
-        // TODO: Добавть личный рекород игрока (Нужен префаб)
+        // TODO: Add player's personal record (Need prefab)
     }
     
     void Update()
@@ -30,9 +31,9 @@ public class MenuController : MonoBehaviour
     IEnumerator tapManager()
     {
         // Mouse 
-        if (Input.GetMouseButton(0))
+        if (Mouse.current.leftButton.isPressed)
         {
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         }
         else
         {
@@ -49,7 +50,7 @@ public class MenuController : MonoBehaviour
                     StartCoroutine(animateButton(objectHit));
                     // PlayerRecord() 
                     yield return new WaitForSeconds(1.0f);
-                    SceneManager.LoadScene("Game");
+                    SceneManager.LoadScene("FFK Sample Scene");
                     break;
             }
         }

@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: -6689036041284674117, guid: 557d37e057466264dbf9486a7f142efa,
         type: 3}
       propertyPath: m_Name
-      value: Cheese Variant
+      value: Cheese
       objectReference: {fileID: 0}
     - target: {fileID: 2774220344278030320, guid: 557d37e057466264dbf9486a7f142efa,
         type: 3}
@@ -115,8 +115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f839d6fd387e746ffaf125e10baf80e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handPositionOffset: {x: 0, y: 0, z: 0}
-  handRotationOffset: {x: 0, y: 0, z: 0}
+  handPositionOffset: {x: 0, y: 0.1, z: 0.5}
+  handRotationOffset: {x: 30, y: -20, z: 0}
   defaultRotation: {x: -90, y: 0, z: 0}
   counterPositionOffset: 0.393
   ingredientName: Cheese

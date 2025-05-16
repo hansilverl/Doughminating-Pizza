@@ -1,72 +1,42 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SojaExiles
-
 {
-	public class opencloseDoor : MonoBehaviour
-	{
+    public class opencloseDoor : MonoBehaviour
+    {
+        public Animator openandclose;
+        public float closeDelay = 0.5f;  // delay before closing
+        
+        private Coroutine closeRoutine;
 
-		public Animator openandclose;
-		public bool open;
-		public Transform Player;
+        void OnTriggerEnter(Collider other)
+        {
+            // If a client entered the trigger
+            if (other.CompareTag("Customer"))
+            {
+                // Open the door immediately
+                openandclose.Play("Opening");
+                // Cancel the scheduled closure if there was one
+                if (closeRoutine != null)
+                    StopCoroutine(closeRoutine);
+            }
+        }
 
-		void Start()
-		{
-			open = false;
-		}
+        void OnTriggerExit(Collider other)
+        {
+            // When the client exits the door area
+            if (other.CompareTag("Customer"))
+            {
+                // Start delayed closing
+                closeRoutine = StartCoroutine(CloseAfterDelay());
+            }
+        }
 
-		void OnMouseOver()
-		{
-			{
-				if (Player)
-				{
-					float dist = Vector3.Distance(Player.position, transform.position);
-					if (dist < 15)
-					{
-						if (open == false)
-						{
-							if (Input.GetMouseButtonDown(0))
-							{
-								StartCoroutine(opening());
-							}
-						}
-						else
-						{
-							if (open == true)
-							{
-								if (Input.GetMouseButtonDown(0))
-								{
-									StartCoroutine(closing());
-								}
-							}
-
-						}
-
-					}
-				}
-
-			}
-
-		}
-
-		IEnumerator opening()
-		{
-			print("you are opening the door");
-			openandclose.Play("Opening");
-			open = true;
-			yield return new WaitForSeconds(.5f);
-		}
-
-		IEnumerator closing()
-		{
-			print("you are closing the door");
-			openandclose.Play("Closing");
-			open = false;
-			yield return new WaitForSeconds(.5f);
-		}
-
-
-	}
+        IEnumerator CloseAfterDelay()
+        {
+            yield return new WaitForSeconds(closeDelay);
+            openandclose.Play("Closing");
+        }
+    }
 }
