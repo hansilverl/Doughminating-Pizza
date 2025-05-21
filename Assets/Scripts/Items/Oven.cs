@@ -3,26 +3,37 @@ using System.Collections;
 
 public class Oven : MonoBehaviour, IInteractable
 {
-    // serializeField is used to expose private variables in the Unity Inspector
-    [SerializeField] private Transform cookingSlot; // Where the pizza will sit
-    [SerializeField] private float cookDuration = 5f;     // Time to Cooked (5 seconds)
-    [SerializeField] private float burnDuration = 10f;    // Time time to Burnt (10 seconds)
+    [Header("Cooking Settings")]
+    [SerializeField] private Transform cookingSlot;
+    [SerializeField] private float cookDuration = 5f;
+    [SerializeField] private float burnDuration = 10f;
+
+    [Header("Door Settings")]
+    [SerializeField] private Transform ovenDoor;
+    [SerializeField] private Vector3 doorOpenRotation = new Vector3(-90f, 0f, 0f); // Change as needed
+    [SerializeField] private float doorAnimationTime = 0.5f;
 
     private GameObject currentItem;
     private float cookTimer;
     private bool isCooking;
+    private bool isDoorOpen = false;
 
     private CookState currentState = CookState.Raw;
 
     public void Interact()
     {
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
-
         if (playerHand == null) return;
+
+        // Open/close the door
+        if (!isDoorOpen)
+        {
+            StartCoroutine(OpenDoor());
+            return;
+        }
 
         if (currentItem == null && playerHand.IsHoldingItem)
         {
-            // Place pizza in oven
             Pizza pizza = playerHand.HeldItem.GetComponent<Pizza>();
             if (pizza != null)
             {
@@ -36,7 +47,6 @@ public class Oven : MonoBehaviour, IInteractable
         }
         else if (currentItem != null && !playerHand.IsHoldingItem)
         {
-            // Take pizza out of oven
             currentItem.transform.SetParent(null);
             playerHand.PickUp(currentItem);
             currentItem = null;
@@ -47,6 +57,9 @@ public class Oven : MonoBehaviour, IInteractable
 
     public string getInteractionText()
     {
+        if (!isDoorOpen)
+            return "Press 'E' to open oven door";
+
         if (currentItem == null)
             return "Press 'E' to place pizza in oven";
         else
@@ -75,6 +88,49 @@ public class Oven : MonoBehaviour, IInteractable
             }
 
             yield return null;
+        }
+    }
+
+    private IEnumerator OpenDoor()
+    {
+        Quaternion startRotation = ovenDoor.localRotation;
+        Quaternion endRotation = Quaternion.Euler(doorOpenRotation);
+
+        float elapsed = 0f;
+        while (elapsed < doorAnimationTime)
+        {
+            ovenDoor.localRotation = Quaternion.Slerp(startRotation, endRotation, elapsed / doorAnimationTime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        ovenDoor.localRotation = endRotation;
+        isDoorOpen = true;
+    }
+
+    private IEnumerator CloseDoor()
+    {
+        Quaternion startRotation = ovenDoor.localRotation;
+        Quaternion endRotation = Quaternion.identity;
+
+        float elapsed = 0f;
+        while (elapsed < doorAnimationTime)
+        {
+            ovenDoor.localRotation = Quaternion.Slerp(startRotation, endRotation, elapsed / doorAnimationTime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        ovenDoor.localRotation = endRotation;
+        isDoorOpen = false;
+    }
+
+    // Optionally call this to auto-close door
+    private void OnTriggerExit(Collider other)
+    {
+        if (isDoorOpen)
+        {
+            StartCoroutine(CloseDoor());
         }
     }
 }
