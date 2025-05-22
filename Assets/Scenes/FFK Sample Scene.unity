@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18300802, g: 0.22869262, b: 0.30677655, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1106,6 +1106,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1124486207}
+    - targetCorrespondingSourceObject: {fileID: -7266742456917395982, guid: 15963db9d5b03c345a9aad55445c3a09,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1124486208}
   m_SourcePrefab: {fileID: 100100000, guid: 15963db9d5b03c345a9aad55445c3a09, type: 3}
 --- !u!1001 &27036374
 PrefabInstance:
@@ -26428,8 +26432,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e69f9d5a0e5f245ac0859437a136b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openAngleY: -120
+  openYAngle: -120
   animationSpeed: 5
+--- !u!64 &1124486208
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124486203}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4549571278306226580, guid: 15963db9d5b03c345a9aad55445c3a09, type: 3}
 --- !u!1001 &1126967286
 PrefabInstance:
   m_ObjectHideFlags: 0
