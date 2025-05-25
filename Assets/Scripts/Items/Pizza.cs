@@ -5,12 +5,17 @@ using UnityEngine;
 public class Pizza : Ingredient
 {
     [SerializeField] private GameObject pizzaUI;
+    [SerializeField] private Vector3 pizzaUIdirection = new Vector3(0, 0, 1f);
     [SerializeField] private CookState CookLevel = CookState.Raw;
     // Time in seconds to cook the pizza
 
     [SerializeField] private bool hasSauce = false;
     [SerializeField] private bool hasCheese = false;
     [SerializeField] private HashSet<Ingredient> ingredients = new HashSet<Ingredient>();
+
+    [SerializeField] private GameObject meshRaw;
+    [SerializeField] private GameObject meshCooked;
+    [SerializeField] private GameObject meshBurnt;
 
     void Start()
     {
@@ -21,8 +26,28 @@ public class Pizza : Ingredient
         {
             GameObject uiInstance = Instantiate(pizzaUI);
             uiInstance.transform.SetParent(this.transform); // Parent to pizza in world space
-            uiInstance.transform.localPosition = new Vector3(0, 0, 1) * 1f; // Offset above the pizza
+            uiInstance.transform.localPosition = this.pizzaUIdirection * 1f; // Offset above the pizza
             pizzaUI = uiInstance;
+        }
+    }
+
+    private void UpdatePizzaVisual()
+    {
+        meshRaw.SetActive(false);
+        meshCooked.SetActive(false);
+        meshBurnt.SetActive(false);
+
+        switch (CookLevel)
+        {
+            case CookState.Raw:
+                meshRaw.SetActive(true);
+                break;
+            case CookState.Cooked:
+                meshCooked.SetActive(true);
+                break;
+            case CookState.Burnt:
+                meshBurnt.SetActive(true);
+                break;
         }
     }
 
@@ -45,10 +70,6 @@ public class Pizza : Ingredient
                         playerHand.Remove();
                         AddIngredient(ingredient);
                     }
-                    else
-                    {
-                        Debug.Log("Pizza already has sauce!");
-                    }
                 }
                 else if (ingredient is Cheese)
                 {
@@ -58,14 +79,6 @@ public class Pizza : Ingredient
                         playerHand.Remove();
                         AddIngredient(ingredient);
                     }
-                    else
-                    {
-                        Debug.Log("Pizza already has cheese!");
-                    }
-                }
-                else
-                {
-                    Debug.Log("Cannot add this ingredient to the pizza!");
                 }
                 this.updateObjectModel();
             }
@@ -78,9 +91,64 @@ public class Pizza : Ingredient
 
     void updateObjectModel()
     {
-        // Update the object model based on the current state of the pizza
-        // This could involve changing the appearance of the pizza based on its ingredients and cook level
-        // For example, you might want to change the texture or model of the pizza to reflect its state
+        if (hasSauce && hasCheese)
+        {
+            Debug.Log("Pizza has cheese and sauce, updating model...");
+            UpdatePizzaVisual();
+            //     GameObject newModel = Resources.Load<GameObject>("Pizza_Uncooked");
+
+            //     if (newModel != null)
+            //     {
+            //         Transform parent = this.transform.parent;
+            //         Vector3 position = this.transform.position;
+
+            //         GameObject instance = Instantiate(newModel, position, Quaternion.identity);
+            //         if (parent != null) instance.transform.SetParent(parent);
+
+            //         Pizza newPizzaScript = instance.AddComponent<Pizza>();
+            //         if (this.hasCheese)
+            //         {
+            //             newPizzaScript.AddIngredient(new Cheese());
+            //         }
+            //         if (this.hasSauce)
+            //         {
+            //             newPizzaScript.AddIngredient(new Sauce());
+            //         }
+            //         foreach (Ingredient ingredient in ingredients)
+            //         {
+            //             newPizzaScript.AddIngredient(ingredient);
+            //         }
+            //         newPizzaScript.CookLevel = this.CookLevel;
+
+            //         // // Destroy the old UI to avoid ghosting
+            //         // if (pizzaUI != null)
+            //         // {
+            //         //     Destroy(pizzaUI);
+            //         //     pizzaUI = null;
+            //         // }
+
+            //         // // Instantiate new UI
+            //         // GameObject pizzaUIPrefab = Resources.Load<GameObject>("PizzaUI");
+            //         // if (pizzaUIPrefab != null)
+            //         // {
+            //         //     GameObject newUI = Instantiate(pizzaUIPrefab, instance.transform);
+            //         //     newUI.transform.localPosition = new Vector3(0, 0, 1f);
+            //         //     newPizzaScript.pizzaUI = newUI;
+            //         // }
+            //         // else
+            //         // {
+            //         //     Debug.LogWarning("Pizza UI prefab not found.");
+            //         // }
+
+            //         Destroy(this.gameObject);
+            //     }
+            //     else
+            //     {
+            //         Debug.LogError("Failed to load the new pizza model!");
+            //     }
+            // }
+        }
+        UpdatePizzaVisual();
     }
 
     void Cook()
