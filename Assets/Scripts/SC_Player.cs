@@ -82,8 +82,25 @@ public class SC_Player : MonoBehaviour
         controller.Move(move * Time.deltaTime);
     }
 
+    void ToggleOutline(IInteractable target, bool state)
+    {
+        if (target == null) return;
+
+        var mono = target as MonoBehaviour;
+        if (mono == null) return;
+
+        var highlight = mono.GetComponent<Highlight>();
+        if (highlight != null)
+        {
+            highlight.SetHighlight(state);
+        }
+    }
+
+
     void HandleInteractionCheck()
     {
+        if (currentInteractable != null)
+            ToggleOutline(currentInteractable, false);
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance))
         {
@@ -95,6 +112,7 @@ public class SC_Player : MonoBehaviour
                 currentInteractable = interactable;
                 string interactionText = interactable.getInteractionText();
 
+                ToggleOutline(currentInteractable, true);
                 if (!string.IsNullOrEmpty(interactionText))
                 {
                     interactionTextUI.text = interactionText;
@@ -109,7 +127,11 @@ public class SC_Player : MonoBehaviour
             }
         }
 
-        currentInteractable = null;
+        if (currentInteractable != null)
+        {
+            ToggleOutline(currentInteractable, false);
+            currentInteractable = null;
+        }
         interactionPanel.SetActive(false);
     }
 
