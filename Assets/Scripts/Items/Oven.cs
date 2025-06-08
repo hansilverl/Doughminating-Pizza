@@ -134,5 +134,5 @@ public class Oven : MonoBehaviour, IInteractable
             StartCoroutine(CloseDoor());
         }
     }
-    */
+
 }
