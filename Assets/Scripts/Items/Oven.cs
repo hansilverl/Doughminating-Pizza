@@ -91,6 +91,7 @@ public class Oven : MonoBehaviour, IInteractable
         }
     }
 
+
     private IEnumerator OpenDoor()
     {
         Quaternion startRotation = ovenDoor.localRotation;
@@ -108,7 +109,7 @@ public class Oven : MonoBehaviour, IInteractable
         isDoorOpen = true;
     }
 
-    private IEnumerator CloseDoor()
+   private IEnumerator CloseDoor()
     {
         Quaternion startRotation = ovenDoor.localRotation;
         Quaternion endRotation = Quaternion.identity;
@@ -133,4 +134,5 @@ public class Oven : MonoBehaviour, IInteractable
             StartCoroutine(CloseDoor());
         }
     }
+    */
 }
