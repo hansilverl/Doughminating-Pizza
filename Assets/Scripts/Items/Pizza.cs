@@ -91,7 +91,7 @@ public class Pizza : Ingredient
         }
     }
 
-    void Cook()
+    public void Cook()
     {
         if (this.CookLevel == CookState.Raw)
         {
