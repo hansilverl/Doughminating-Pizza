@@ -78,7 +78,6 @@ public class Pizza : Ingredient
                 {
                     playerHand.Remove();
                     AddIngredient(ingredient);
-                    updateObjectModel();
                 }
                 else
                 {
@@ -102,7 +101,13 @@ public class Pizza : Ingredient
         {
             this.CookLevel = CookState.Burnt;
         }
-        pizzaUI.GetComponent<PizzaUIController>().setCookLevel(this.CookLevel); // Update the UI with the new cook level
+    }
+
+    // Method to set the cook state from Oven class
+    public void SetCookState(CookState newState)
+    {
+        CookLevel = newState;
+        Debug.Log($"Pizza cook state changed to: {newState}");
     }
 
     public override string getInteractionText()
