@@ -78,7 +78,6 @@ public class Pizza : Ingredient
                 {
                     playerHand.Remove();
                     AddIngredient(ingredient);
-                    updateObjectModel();
                 }
                 else
                 {
@@ -92,13 +91,6 @@ public class Pizza : Ingredient
         }
     }
 
-    void updateObjectModel()
-    {
-        // Update the object model based on the current state of the pizza
-        // This could involve changing the appearance of the pizza based on its ingredients and cook level
-        // For example, you might want to change the texture or model of the pizza to reflect its state
-    }
-
     void Cook()
     {
         if (this.CookLevel == CookState.Raw)
@@ -109,7 +101,6 @@ public class Pizza : Ingredient
         {
             this.CookLevel = CookState.Burnt;
         }
-        updateObjectModel();
     }
 
     // Method to set the cook state from Oven class
@@ -117,7 +108,6 @@ public class Pizza : Ingredient
     {
         CookLevel = newState;
         Debug.Log($"Pizza cook state changed to: {newState}");
-        updateObjectModel();
     }
 
     public override string getInteractionText()
