@@ -82,6 +82,20 @@ public class SC_Player : MonoBehaviour
         controller.Move(move * Time.deltaTime);
     }
 
+    // void ToggleOutline(IInteractable target, bool state)
+    // {
+    //     if (target == null) return;
+
+    //     var mono = target as MonoBehaviour;
+    //     if (mono == null) return;
+
+    //     var highlight = mono.GetComponent<Highlight>();
+    //     if (highlight != null)
+    //     {
+    //         highlight.SetHighlight(state);
+    //     }
+    // }
+
     void ToggleOutline(IInteractable target, bool state)
     {
         if (target == null) return;
@@ -89,7 +103,7 @@ public class SC_Player : MonoBehaviour
         var mono = target as MonoBehaviour;
         if (mono == null) return;
 
-        var highlight = mono.GetComponent<Highlight>();
+        var highlight = mono.GetComponent<SimpleMaterialHighlighter>();
         if (highlight != null)
         {
             highlight.SetHighlight(state);
