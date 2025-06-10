@@ -4,52 +4,41 @@ using System.Collections;
 public class Oven : MonoBehaviour, IInteractable
 {
     [Header("Cooking Settings")]
-    [SerializeField] private Transform cookingSlot;
+    [SerializeField] private Vector3 pizzaPlacementPosition = new Vector3(-0.7f, 1.633f, 20.5f);
     [SerializeField] private float cookDuration = 5f;
     [SerializeField] private float burnDuration = 10f;
 
-    [Header("Door Settings")]
-    [SerializeField] private Transform ovenDoor;
-    [SerializeField] private Vector3 doorOpenRotation = new Vector3(-90f, 0f, 0f); // Change as needed
-    [SerializeField] private float doorAnimationTime = 0.5f;
-
-    private GameObject currentItem;
+    private GameObject currentPizza;
     private float cookTimer;
     private bool isCooking;
-    private bool isDoorOpen = false;
-
     private CookState currentState = CookState.Raw;
 
     public void Interact()
     {
-        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
+        PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
         if (playerHand == null) return;
 
-        // Open/close the door
-        if (!isDoorOpen)
-        {
-            StartCoroutine(OpenDoor());
-            return;
-        }
-
-        if (currentItem == null && playerHand.IsHoldingItem)
+        if (currentPizza == null && playerHand.IsHoldingItem)
         {
             Pizza pizza = playerHand.HeldItem.GetComponent<Pizza>();
             if (pizza != null)
             {
                 playerHand.Drop();
-                currentItem = pizza.gameObject;
-                currentItem.transform.SetParent(cookingSlot);
-                currentItem.transform.localPosition = Vector3.zero;
-                currentItem.transform.localRotation = Quaternion.identity;
+                currentPizza = pizza.gameObject;
+
+                // Place it in the world — don't parent or use local position
+                currentPizza.transform.position = pizzaPlacementPosition;
+                Vector3 defaultRotation = currentPizza.GetComponent<IPickable>()?.GetDefaultRotation() ?? Vector3.zero;
+                currentPizza.transform.rotation = Quaternion.Euler(defaultRotation.x, defaultRotation.y, defaultRotation.z);
+
                 StartCoroutine(CookPizza(pizza));
             }
         }
-        else if (currentItem != null && !playerHand.IsHoldingItem)
+        else if (currentPizza != null && !playerHand.IsHoldingItem)
         {
-            currentItem.transform.SetParent(null);
-            playerHand.PickUp(currentItem);
-            currentItem = null;
+            currentPizza.transform.SetParent(null); // Just in case it ever was parented
+            playerHand.PickUp(currentPizza);
+            currentPizza = null;
             isCooking = false;
             StopAllCoroutines();
         }
@@ -57,19 +46,25 @@ public class Oven : MonoBehaviour, IInteractable
 
     public string getInteractionText()
     {
-        if (!isDoorOpen)
-            return "Press 'E' to open oven door";
+        PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
 
-        if (currentItem == null)
-            return "Press 'E' to place pizza in oven";
-        else
-            return "Press 'E' to take pizza out";
+        if (currentPizza == null && playerHand != null && playerHand.IsHoldingItem)
+        {
+            if (playerHand.HeldItem.GetComponent<Pizza>() != null)
+                return "Press 'E' to place pizza in oven";
+        }
+        else if (currentPizza != null)
+        {
+            return "Press 'E' to remove pizza";
+        }
+        return "";
     }
 
     private IEnumerator CookPizza(Pizza pizza)
     {
         isCooking = true;
         cookTimer = 0f;
+        currentState = CookState.Raw;
 
         while (isCooking)
         {
@@ -79,9 +74,9 @@ public class Oven : MonoBehaviour, IInteractable
             {
                 pizza.SetCookState(CookState.Burnt);
                 currentState = CookState.Burnt;
-                yield break;
+                break;
             }
-            else if (cookTimer >= cookDuration)
+            else if (cookTimer >= cookDuration && currentState == CookState.Raw)
             {
                 pizza.SetCookState(CookState.Cooked);
                 currentState = CookState.Cooked;
@@ -90,49 +85,4 @@ public class Oven : MonoBehaviour, IInteractable
             yield return null;
         }
     }
-
-
-    private IEnumerator OpenDoor()
-    {
-        Quaternion startRotation = ovenDoor.localRotation;
-        Quaternion endRotation = Quaternion.Euler(doorOpenRotation);
-
-        float elapsed = 0f;
-        while (elapsed < doorAnimationTime)
-        {
-            ovenDoor.localRotation = Quaternion.Slerp(startRotation, endRotation, elapsed / doorAnimationTime);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        ovenDoor.localRotation = endRotation;
-        isDoorOpen = true;
-    }
-
-   private IEnumerator CloseDoor()
-    {
-        Quaternion startRotation = ovenDoor.localRotation;
-        Quaternion endRotation = Quaternion.identity;
-
-        float elapsed = 0f;
-        while (elapsed < doorAnimationTime)
-        {
-            ovenDoor.localRotation = Quaternion.Slerp(startRotation, endRotation, elapsed / doorAnimationTime);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        ovenDoor.localRotation = endRotation;
-        isDoorOpen = false;
-    }
-
-    // Optionally call this to auto-close door
-    private void OnTriggerExit(Collider other)
-    {
-        if (isDoorOpen)
-        {
-            StartCoroutine(CloseDoor());
-        }
-    }
-
 }

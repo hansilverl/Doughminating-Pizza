@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18300837, g: 0.22869337, b: 0.30677772, a: 1}
+  m_IndirectSpecularColor: {r: 0.18300802, g: 0.22869262, b: 0.30677655, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9711,12 +9711,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ae0f0827e6af204e8dacb8bbe90cde2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cookingSlot: {fileID: 0}
+  pizzaPlacementPosition: {x: -0.527, y: 1.633, z: 20.71}
   cookDuration: 5
   burnDuration: 10
-  ovenDoor: {fileID: 0}
-  doorOpenRotation: {x: -90, y: 0, z: 0}
-  doorAnimationTime: 0.5
 --- !u!4 &485091758 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1894278557110064346, guid: c78bc6eecce41e24ea169a70169c6508,
@@ -28937,12 +28934,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ae0f0827e6af204e8dacb8bbe90cde2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cookingSlot: {fileID: 0}
+  pizzaPlacementPosition: {x: -0.59, y: 1.633, z: 20.3}
   cookDuration: 5
   burnDuration: 10
-  ovenDoor: {fileID: 0}
-  doorOpenRotation: {x: -90, y: 0, z: 0}
-  doorAnimationTime: 0.5
 --- !u!65 &1299088416
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28962,8 +28956,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 515.46173, y: 450.54193, z: 302.04803}
-  m_Center: {x: 115.50314, y: 194.84361, z: 188.25526}
+  m_Size: {x: 515.46173, y: 450.54193, z: 310.048}
+  m_Center: {x: 112.5031, y: 194.84361, z: 181.2553}
 --- !u!1 &1299998680
 GameObject:
   m_ObjectHideFlags: 0
@@ -32413,26 +32407,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75c16d4794f25e84ea8d82ee45dd1937, type: 3}
---- !u!1 &1414311787 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7697652906340743626, guid: dd02c6a21a04843498dd9aada1bef58d,
-    type: 3}
-  m_PrefabInstance: {fileID: 2144802502}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1414311788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1414311787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d743bd5c0404f734295bb07ba343e102, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  renderers: []
-  highlightColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1001 &1417422663
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49128,83 +49102,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2142697671}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2144802502
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 7132885647023285086, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: ingredientName
-      value: Pizza
-      objectReference: {fileID: 0}
-    - target: {fileID: 7697652906340743626, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_Name
-      value: Pizza (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.561
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.593
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 20.357
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8032250293156246401, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7697652906340743626, guid: dd02c6a21a04843498dd9aada1bef58d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1414311788}
-  m_SourcePrefab: {fileID: 100100000, guid: dd02c6a21a04843498dd9aada1bef58d, type: 3}
 --- !u!1001 &2145624734
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49519,7 +49416,6 @@ SceneRoots:
   - {fileID: 1201433855}
   - {fileID: 1242750578}
   - {fileID: 4218667952783277005}
-  - {fileID: 2144802502}
   - {fileID: 1809768930}
   - {fileID: 294239374}
   - {fileID: 1079510893}
