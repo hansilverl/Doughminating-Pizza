@@ -104,6 +104,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7056220659163187275}
+    - targetCorrespondingSourceObject: {fileID: -6689036041284674117, guid: 0020f4a7f6f363c48828b18e01301624,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4303129753197633936}
   m_SourcePrefab: {fileID: -5645937942226959685, guid: 0020f4a7f6f363c48828b18e01301624,
     type: 3}
 --- !u!1 &7697652906340743626 stripped
@@ -183,6 +187,9 @@ MonoBehaviour:
   CookLevel: 0
   hasSauce: 0
   hasCheese: 0
+  hasBacon: 0
+  hasPineapple: 0
+  hasPepperoni: 0
 --- !u!64 &7056220659163187275
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -205,3 +212,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7227129179611170996, guid: 0020f4a7f6f363c48828b18e01301624, type: 3}
+--- !u!114 &4303129753197633936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7697652906340743626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c2f342d335b074ca178037c995fbb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 2100000, guid: aba4aefe2332979428c5e817e9e20c9e, type: 2}

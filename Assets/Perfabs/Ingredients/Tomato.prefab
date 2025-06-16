@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6598721466602425929
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -6854386027549468247, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_Name
+      value: Tomato Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.3391144
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.474223
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 19.87145
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9984709
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.00000008133579
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.0000000045031556
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.055280343
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5822248857759095700, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -6854386027549468247, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3083701084521894385}
+    - targetCorrespondingSourceObject: {fileID: -6854386027549468247, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3316262362315173420}
+    - targetCorrespondingSourceObject: {fileID: -6854386027549468247, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1474898484487488423}
+  m_SourcePrefab: {fileID: 3150474306388093854, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+    type: 3}
+--- !u!1 &8895464748629776352 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -6854386027549468247, guid: 318b8bebeb998a14980ae4aef0b9cdbf,
+    type: 3}
+  m_PrefabInstance: {fileID: 6598721466602425929}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3083701084521894385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8895464748629776352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c2f342d335b074ca178037c995fbb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 2100000, guid: aba4aefe2332979428c5e817e9e20c9e, type: 2}
+--- !u!114 &3316262362315173420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8895464748629776352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ab3e2fbc46b04da78d64edab186c420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handPositionOffset: {x: 0, y: 0.25, z: 0.22}
+  handRotationOffset: {x: 0, y: 0, z: 0}
+  defaultRotation: {x: 0, y: 0, z: 0}
+  counterPositionOffset: 0.56
+  ingredientName: Tomato
+--- !u!135 &1474898484487488423
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8895464748629776352}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.049728706
+  m_Center: {x: -0.019566575, y: -0.041574977, z: 2.5543242e-16}
