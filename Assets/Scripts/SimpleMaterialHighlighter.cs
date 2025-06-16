@@ -20,26 +20,29 @@ public class SimpleMaterialHighlighter : MonoBehaviour
 
         for (int i = 0; i < renderers.Length; i++)
         {
+            // Store a copy of the original materials
             originalMaterials[i] = renderers[i].materials;
         }
     }
 
     public void SetHighlight(bool state)
     {
-        if (state == isHighlighted) return; // Skip if already in desired state
+        if (state == isHighlighted) return;
         isHighlighted = state;
 
         for (int i = 0; i < renderers.Length; i++)
         {
             if (state)
             {
-                Material[] newMats = new Material[renderers[i].materials.Length];
-                for (int j = 0; j < newMats.Length; j++)
-                    newMats[j] = highlightMaterial;
-                renderers[i].materials = newMats;
+                // Append highlight material to existing materials
+                Material[] combined = new Material[originalMaterials[i].Length + 1];
+                originalMaterials[i].CopyTo(combined, 0);
+                combined[combined.Length - 1] = highlightMaterial;
+                renderers[i].materials = combined;
             }
             else
             {
+                // Restore original materials
                 renderers[i].materials = originalMaterials[i];
             }
         }
