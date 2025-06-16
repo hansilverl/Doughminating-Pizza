@@ -101,6 +101,8 @@ public class Pizza : Ingredient
         {
             this.CookLevel = CookState.Burnt;
         }
+
+        pizzaUI.GetComponent<PizzaUIController>().setCookLevel(this.CookLevel);
     }
 
     // Method to set the cook state from Oven class
