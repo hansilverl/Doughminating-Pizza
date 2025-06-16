@@ -5,7 +5,11 @@ using TMPro;
 
 [RequireComponent(typeof(CharacterController))]
 public class SC_Player : MonoBehaviour
+
 {
+    [Header("Pause Menu")]
+    public GameObject pauseMenuUI;
+
     [Header("Player Settings")]
     public float moveSpeed = 5f;
     public float lookSensitivity = 2f;
@@ -38,6 +42,9 @@ public class SC_Player : MonoBehaviour
         _actions.Player.Look.canceled += _ => lookInput = Vector2.zero;
 
         _actions.Player.Interact.performed += _ => HandleInteractionInput(); // 🔑 uses Input Action "Interact"
+
+        _actions.Player.Pause.performed += _ => TogglePauseMenu();
+        // _actions.Player.Pause.canceled += _ => TogglePauseMenu();
     }
 
     void OnEnable() => _actions.Enable();
@@ -81,20 +88,6 @@ public class SC_Player : MonoBehaviour
 
         controller.Move(move * Time.deltaTime);
     }
-
-    // void ToggleOutline(IInteractable target, bool state)
-    // {
-    //     if (target == null) return;
-
-    //     var mono = target as MonoBehaviour;
-    //     if (mono == null) return;
-
-    //     var highlight = mono.GetComponent<Highlight>();
-    //     if (highlight != null)
-    //     {
-    //         highlight.SetHighlight(state);
-    //     }
-    // }
 
     void ToggleOutline(IInteractable target, bool state)
     {
@@ -154,6 +147,22 @@ public class SC_Player : MonoBehaviour
         if (currentInteractable != null)
         {
             currentInteractable.Interact();
+        }
+    }
+
+    void TogglePauseMenu()
+    {
+        if (pauseMenuUI.activeSelf)
+        {
+            pauseMenuUI.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            pauseMenuUI.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 }
