@@ -88,9 +88,8 @@ public class Pizza : Ingredient
                     playerHand.InvalidAction("You can't add " + ingredient.GetIngredientName() + " to the pizza!", 2f);
                 }
             }
-            
+
             Tool tool = held.GetComponent<Tool>();
-            Debug.Log("Tool: " + tool);
             if (tool != null)
             {
                 playerHand.InvalidAction("You can't use " + tool.GetToolName() + " on the pizza!", 2f);

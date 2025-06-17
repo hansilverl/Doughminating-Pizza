@@ -68,7 +68,6 @@ public class PlayerHand : MonoBehaviour
 
     public void ShakeHeldItem(float intensity = 0.005f, float duration = 0.3f)
     {
-        Debug.Log("Shaking item: " + heldItem.name);
         StartCoroutine(ShakeCoroutine(intensity, duration));
     }
 
