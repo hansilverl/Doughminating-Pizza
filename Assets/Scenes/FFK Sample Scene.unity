@@ -12395,6 +12395,7 @@ MonoBehaviour:
   interactionDistance: 2
   interactionTextUI: {fileID: 1679995489}
   interactionPanel: {fileID: 786850658}
+  toastPanel: {fileID: 1150613780}
   gravity: -9.81
 --- !u!114 &545250881
 MonoBehaviour:
@@ -12411,6 +12412,8 @@ MonoBehaviour:
   holdPoint: {fileID: 969794288}
   floatHeight: 0.0001
   floatSpeed: 2
+  toastPanel: {fileID: 1150613781}
+  toastText: {fileID: 1550941975}
 --- !u!1001 &546328125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26919,7 +26922,7 @@ GameObject:
   - component: {fileID: 1150613783}
   - component: {fileID: 1150613782}
   m_Layer: 5
-  m_Name: BubblePanel
+  m_Name: ToastPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30562,6 +30565,8 @@ MonoBehaviour:
   holdPoint: {fileID: 1407601872}
   floatHeight: 0.0001
   floatSpeed: 2
+  toastPanel: {fileID: 0}
+  toastText: {fileID: 0}
 --- !u!1001 &1289491692
 PrefabInstance:
   m_ObjectHideFlags: 0

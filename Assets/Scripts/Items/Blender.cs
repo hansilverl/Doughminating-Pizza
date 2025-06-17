@@ -18,24 +18,10 @@ public class Blender : Tool
             {
                 isBlending = true; // Set the flag to true
                 StartCoroutine(Blend(playerHand, ingredient));
-
-
-                // blending tomato logic
-
-                // playerHand.Remove();
-
-                // //Reuse IngredientFactory
-                // IngredientFactory factory = GetComponent<IngredientFactory>();
-                // if (factory != null)
-                // {
-                //     factory.Interact(spawnPoint); // Triggers the sauce spawn!
-                //     AudioSource audio = GetComponent<AudioSource>();
-                //     if (audio != null)
-                //     {
-                //         audio.Play(); // Play the blending sound
-                //     }
-                // }
-
+            }
+            else
+            {
+                playerHand.InvalidAction("You can only blend tomatoes!", 2f);
             }
         }
     }

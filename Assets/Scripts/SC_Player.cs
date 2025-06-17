@@ -20,6 +20,7 @@ public class SC_Player : MonoBehaviour
     public float interactionDistance = 3f;
     public TMP_Text interactionTextUI;
     public GameObject interactionPanel;
+    public GameObject toastPanel;
 
     private PlayerControls _actions;
     private CharacterController controller;
@@ -161,6 +162,7 @@ public class SC_Player : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             _actions.Player.Look.Disable(); // Freeze mouse movement
+            toastPanel?.SetActive(false); // Hide toast panel if it exists
         }
         else
         {
