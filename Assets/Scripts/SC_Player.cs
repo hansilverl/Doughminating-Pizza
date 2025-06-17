@@ -9,6 +9,7 @@ public class SC_Player : MonoBehaviour
 {
     [Header("Pause Menu")]
     public GameObject pauseMenuUI;
+    private bool isPaused = false;
 
     [Header("Player Settings")]
     public float moveSpeed = 5f;
@@ -152,17 +153,21 @@ public class SC_Player : MonoBehaviour
 
     void TogglePauseMenu()
     {
-        if (pauseMenuUI.activeSelf)
-        {
-            pauseMenuUI.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-        else
+        isPaused = !isPaused;
+        Time.timeScale = isPaused ? 0f : 1f;
+        if (isPaused)
         {
             pauseMenuUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            _actions.Player.Look.Disable(); // Freeze mouse movement
+        }
+        else
+        {
+            pauseMenuUI.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            _actions.Player.Look.Enable();
         }
     }
 }
