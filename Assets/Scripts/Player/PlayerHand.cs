@@ -15,9 +15,10 @@ public class PlayerHand : MonoBehaviour
         IPickable pickable = item.GetComponent<IPickable>();
         if (pickable != null)
         {
+            Debug.Log("Picking up item: " + item.name);
             if (heldItem != null)
             {
-                Debug.Log("Already holding an item. Cannot pick up another.");
+                ShakeHeldItem();
                 return;
             }
 
@@ -28,7 +29,30 @@ public class PlayerHand : MonoBehaviour
         }
 
     }
-    public void Remove() {
+
+    public void ShakeHeldItem(float intensity = 0.005f, float duration = 0.3f)
+    {
+        Debug.Log("Shaking item: " + heldItem.name);
+        StartCoroutine(ShakeCoroutine(intensity, duration));
+    }
+
+    private IEnumerator ShakeCoroutine(float intensity, float duration)
+    {
+        Vector3 originalPosition = heldItem.transform.localPosition;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float xOffset = Random.Range(-intensity, intensity);
+            float yOffset = Random.Range(-intensity, intensity);
+            heldItem.transform.localPosition = originalPosition + new Vector3(xOffset, yOffset, 0f);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        heldItem.transform.localPosition = originalPosition; // Reset position after shaking
+    }
+    public void Remove()
+    {
         if (heldItem != null)
         {
             Destroy(heldItem);
@@ -37,14 +61,16 @@ public class PlayerHand : MonoBehaviour
         }
     }
 
-    public void Drop() {
+    public void Drop()
+    {
         if (heldItem != null)
         {
             heldItem.transform.SetParent(null);
             heldItem = null;
         }
     }
-    public void MoveItemUpDown() {
+    public void MoveItemUpDown()
+    {
         if (heldItem != null)
         {
             Vector3 newPosition = heldItem.transform.localPosition;

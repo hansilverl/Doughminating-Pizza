@@ -5,14 +5,16 @@ using UnityEngine;
 public abstract class Ingredient : IPickable, IInteractable
 {
     [SerializeField] protected string ingredientName;
-    
-    public virtual void Interact() {
+
+    public virtual void Interact()
+    {
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
-        if (playerHand != null && !playerHand.IsHoldingItem)
-        {
-            transform.SetParent(null);
-            playerHand.PickUp(this.gameObject);
-        }
+        playerHand.PickUp(this.gameObject);
+        // if (playerHand != null && !playerHand.IsHoldingItem)
+        // {
+        //     playerHand.PickUp(this.gameObject);
+        //     transform.SetParent(null);
+        // }
     }
 
     public abstract string getInteractionText(); // returns the name of the ingredient
