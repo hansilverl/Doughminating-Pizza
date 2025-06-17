@@ -16321,7 +16321,6 @@ GameObject:
   m_Component:
   - component: {fileID: 730012310}
   - component: {fileID: 730012309}
-  - component: {fileID: 730012308}
   - component: {fileID: 730012307}
   m_Layer: 0
   m_Name: SteveCamera
@@ -16374,14 +16373,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!81 &730012308
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 730012306}
-  m_Enabled: 1
 --- !u!20 &730012309
 Camera:
   m_ObjectHideFlags: 0
