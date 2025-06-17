@@ -1,12 +1,18 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Oven : MonoBehaviour, IInteractable
 {
+    [Header("UI Elements")]
+    [SerializeField] private Image ovenTimerImage;
+
     [Header("Cooking Settings")]
     [SerializeField] private Vector3 pizzaPlacementPosition = new Vector3(-0.7f, 1.633f, 20.5f);
     [SerializeField] private float cookDuration = 5f;
     [SerializeField] private float burnDuration = 10f;
+
+
 
     private GameObject currentPizza;
     private float cookTimer;
@@ -66,10 +72,19 @@ public class Oven : MonoBehaviour, IInteractable
         cookTimer = 0f;
         currentState = CookState.Raw;
 
+        if (ovenTimerImage != null)
+        {
+            ovenTimerImage.fillAmount = 1f;
+            ovenTimerImage.gameObject.SetActive(true);
+        }
+
         while (isCooking)
         {
-            Debug.Log($"Cooking pizza: {cookTimer}/{cookDuration} seconds");
             cookTimer += Time.deltaTime;
+
+            float progress = 1f - (cookTimer / burnDuration); // 1 -> 0
+            if (ovenTimerImage != null)
+                ovenTimerImage.fillAmount = Mathf.Clamp01(progress);
 
             if (cookTimer >= burnDuration)
             {
@@ -84,6 +99,13 @@ public class Oven : MonoBehaviour, IInteractable
             }
 
             yield return null;
+        }
+
+        // Optionally hide the timer when done
+        if (ovenTimerImage != null)
+        {
+            ovenTimerImage.fillAmount = 0f;
+            ovenTimerImage.gameObject.SetActive(false);
         }
     }
 }

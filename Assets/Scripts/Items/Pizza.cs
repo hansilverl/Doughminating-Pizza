@@ -88,16 +88,17 @@ public class Pizza : Ingredient
                     playerHand.InvalidAction("You can't add " + ingredient.GetIngredientName() + " to the pizza!", 2f);
                 }
             }
-            Tool tool = playerHand.HeldItem.GetComponent<Tool>();
+            
+            Tool tool = held.GetComponent<Tool>();
             Debug.Log("Tool: " + tool);
             if (tool != null)
             {
                 playerHand.InvalidAction("You can't use " + tool.GetToolName() + " on the pizza!", 2f);
             }
-            else if (playerHand != null && !playerHand.IsHoldingItem)
-            {
-                base.Interact(); // Call the base interact method to pick up the pizza
-            }
+        }
+        else if (playerHand != null && !playerHand.IsHoldingItem)
+        {
+            base.Interact(); // Call the base interact method to pick up the pizza
         }
     }
 
