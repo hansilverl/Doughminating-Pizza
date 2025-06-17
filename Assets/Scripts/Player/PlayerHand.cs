@@ -53,7 +53,7 @@ public class PlayerHand : MonoBehaviour
 
     }
 
-    public void InvalidAction(string  message, float duration = 2f)
+    public void InvalidAction(string message, float duration = 2f)
     {
         if (heldItem != null)
         {
@@ -73,6 +73,8 @@ public class PlayerHand : MonoBehaviour
 
     private IEnumerator ShakeCoroutine(float intensity, float duration)
     {
+        if (heldItem == null) yield break;
+        
         Vector3 originalPosition = heldItem.transform.localPosition;
         float elapsed = 0f;
 
