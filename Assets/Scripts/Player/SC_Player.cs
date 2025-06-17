@@ -9,6 +9,7 @@ public class SC_Player : MonoBehaviour
 {
     [Header("Pause Menu")]
     public GameObject pauseMenuUI;
+    // public UnityEngine.UI.Image resumeButtonImage; // Reference to the button image for click effect
     private bool isPaused = false;
 
     [Header("Player Settings")]
@@ -152,12 +153,35 @@ public class SC_Player : MonoBehaviour
         }
     }
 
+    public void PlayClickEffect(RectTransform buttonTransform)
+    {
+        StartCoroutine(ClickEffect(buttonTransform));
+    }
+
+    private IEnumerator ClickEffect(RectTransform target)
+    {
+        Vector3 originalScale = target.localScale;
+        Quaternion originalRotation = target.localRotation;
+        Vector3 pressedScale = originalScale * 1.05f;
+        Quaternion tiltRotation = Quaternion.Euler(0, 0, 10f); // Tilt 10 degrees sideways
+
+        target.localScale = pressedScale;
+        target.localRotation = tiltRotation;
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        target.localScale = originalScale;
+        target.localRotation = originalRotation;
+
+        TogglePauseMenu(); // Call resume after the effect
+    }
+
     void TogglePauseMenu()
     {
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0f : 1f;
         if (isPaused)
         {
+            // Show pause menu
             pauseMenuUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -166,6 +190,7 @@ public class SC_Player : MonoBehaviour
         }
         else
         {
+            // Hide pause menu
             pauseMenuUI.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
