@@ -68,6 +68,7 @@ public class Oven : MonoBehaviour, IInteractable
 
         while (isCooking)
         {
+            Debug.Log($"Cooking pizza: {cookTimer}/{cookDuration} seconds");
             cookTimer += Time.deltaTime;
 
             if (cookTimer >= burnDuration)

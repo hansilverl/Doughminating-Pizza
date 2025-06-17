@@ -146,7 +146,7 @@ public class SC_Player : MonoBehaviour
 
     void HandleInteractionInput()
     {
-        if (currentInteractable != null)
+        if (currentInteractable != null && !isPaused)
         {
             currentInteractable.Interact();
         }
