@@ -40,22 +40,14 @@ public class Oven : MonoBehaviour, IInteractable
 
                 StartCoroutine(CookPizza(pizza));
             }
+            else
+            {
+                playerHand.InvalidAction("You can only place a pizza!", 2f);
+            }
         }
         else if (currentPizza != null && playerHand.IsHoldingItem)
         {
             playerHand.InvalidAction("There's an item in the oven already!", 2f);
-        }
-        else if (currentPizza == null && playerHand.IsHoldingItem)
-        {
-            if (playerHand.HeldItem != null)
-            {
-                var pizza = playerHand.HeldItem.GetComponent<Pizza>();
-                if (pizza == null)
-                {
-                    playerHand.InvalidAction("You can only place pizzas in the oven!", 2f);
-                    return;
-                }
-            }
         }
         else if (currentPizza != null && !playerHand.IsHoldingItem)
         {
