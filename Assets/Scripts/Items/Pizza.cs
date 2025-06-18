@@ -21,6 +21,7 @@ public class Pizza : Ingredient
     public bool HasBacon => hasBacon;
     public bool HasPineapple => hasPineapple;
     public bool HasPepperoni => hasPepperoni;
+    public CookState GetCookLevel() => CookLevel;
 
     void Start()
     {
@@ -45,7 +46,11 @@ public class Pizza : Ingredient
             Ingredient ingredient = held.GetComponent<Ingredient>();
             if (ingredient != null)
             {
-                if (this.CookLevel != CookState.Raw) return; // Cannot add ingredients to a cooked pizza
+                if (this.CookLevel != CookState.Raw)
+                {
+                    playerHand.InvalidAction("Pizza is " + this.CookLevel.ToString().ToLower() + "! Can't add!", 2f);
+                    return;
+                }
 
                 bool ingredientAdded = false;
                 if (ingredient is Sauce && !hasSauce)
@@ -81,8 +86,14 @@ public class Pizza : Ingredient
                 }
                 else
                 {
-                    Debug.Log($"Cannot add {ingredient.GetType().Name} to the pizza!");
+                    playerHand.InvalidAction("You can't add " + ingredient.GetIngredientName() + " to the pizza!", 2f);
                 }
+            }
+
+            Tool tool = held.GetComponent<Tool>();
+            if (tool != null)
+            {
+                playerHand.InvalidAction("You can't use " + tool.GetToolName() + " on the pizza!", 2f);
             }
         }
         else if (playerHand != null && !playerHand.IsHoldingItem)
@@ -114,6 +125,24 @@ public class Pizza : Ingredient
 
     public override string getInteractionText()
     {
+
+        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
+        if (!playerHand.IsHoldingItem)
+        {
+            return "Pick up the pizza";
+        }
+        else
+        {
+            if (playerHand.HeldItem.GetComponent<Ingredient>() != null)
+            {
+                Ingredient heldIngredient = playerHand.HeldItem.GetComponent<Ingredient>();
+                return "Add " + heldIngredient.GetIngredientName() + " to the pizza";
+            }
+            if (playerHand.HeldItem.GetComponent<Tool>() != null)
+            {
+                return "Use " + playerHand.HeldItem.GetComponent<Tool>().GetToolName() + " on the pizza";
+            }
+        }
         return "Pick " + GetIngredientName();
     }
 

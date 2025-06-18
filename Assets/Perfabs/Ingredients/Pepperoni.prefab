@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: -6689036041284674117, guid: d46e262810ec3a44cbcc50bbdd38a127,
         type: 3}
       propertyPath: m_Name
-      value: pepperoni Variant
+      value: Pepperoni
       objectReference: {fileID: 0}
     - target: {fileID: 2774220344278030320, guid: d46e262810ec3a44cbcc50bbdd38a127,
         type: 3}
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890026d5a8c4f0b47958af5add86ac6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handPositionOffset: {x: 0, y: 0.2, z: 0.2}
+  handPositionOffset: {x: 0, y: 0.19, z: 0.2}
   handRotationOffset: {x: 0, y: 0, z: 0}
   defaultRotation: {x: 90, y: 0, z: 0}
   counterPositionOffset: 0
