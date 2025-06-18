@@ -18,6 +18,7 @@ public class Oven : MonoBehaviour, IInteractable
     private float cookTimer;
     private bool isCooking;
     private CookState currentState = CookState.Raw;
+    [SerializeField] private ParticleSystem smokeEffect;
 
     public void Interact()
     {
@@ -40,6 +41,22 @@ public class Oven : MonoBehaviour, IInteractable
                 StartCoroutine(CookPizza(pizza));
             }
         }
+        else if (currentPizza != null && playerHand.IsHoldingItem)
+        {
+            playerHand.InvalidAction("There's an item in the oven already!", 2f);
+        }
+        else if (currentPizza == null && playerHand.IsHoldingItem)
+        {
+            if (playerHand.HeldItem != null)
+            {
+                var pizza = playerHand.HeldItem.GetComponent<Pizza>();
+                if (pizza == null)
+                {
+                    playerHand.InvalidAction("You can only place pizzas in the oven!", 2f);
+                    return;
+                }
+            }
+        }
         else if (currentPizza != null && !playerHand.IsHoldingItem)
         {
             currentPizza.transform.SetParent(null); // Just in case it ever was parented
@@ -47,6 +64,16 @@ public class Oven : MonoBehaviour, IInteractable
             currentPizza = null;
             isCooking = false;
             StopAllCoroutines();
+
+            if (ovenTimerImage != null)
+            {
+                ovenTimerImage.fillAmount = 0f;
+                ovenTimerImage.color = Color.green;
+                ovenTimerImage.transform.localRotation = Quaternion.identity;
+                ovenTimerImage.gameObject.SetActive(false);
+            }
+            if (smokeEffect)
+                smokeEffect.gameObject.SetActive(false);
         }
     }
 
@@ -69,27 +96,54 @@ public class Oven : MonoBehaviour, IInteractable
     private IEnumerator CookPizza(Pizza pizza)
     {
         isCooking = true;
-        cookTimer = 0f;
-        currentState = CookState.Raw;
+        currentState = pizza.GetCookLevel();
+        cookTimer = currentState == CookState.Raw ? 0f : currentState == CookState.Cooked ? cookDuration : burnDuration;
 
         if (ovenTimerImage != null)
         {
             ovenTimerImage.fillAmount = 1f;
             ovenTimerImage.gameObject.SetActive(true);
+            ovenTimerImage.color = Color.green;
+            ovenTimerImage.transform.localRotation = Quaternion.identity;
         }
 
         while (isCooking)
         {
             cookTimer += Time.deltaTime;
 
-            float progress = 1f - (cookTimer / burnDuration); // 1 -> 0
             if (ovenTimerImage != null)
-                ovenTimerImage.fillAmount = Mathf.Clamp01(progress);
+            {
+                // Phase 1: Cooking
+                if (cookTimer <= cookDuration)
+                {
+                    float cookProgress = cookTimer / cookDuration;
+                    ovenTimerImage.fillAmount = 1f - cookProgress;
+                    ovenTimerImage.color = Color.green;
+                    // ovenTimerImage.transform.Rotate(Vector3.forward, -360f * Time.deltaTime / cookDuration);
+                }
+                // Phase 2: Burning
+                else if (cookDuration <= cookTimer && cookTimer <= burnDuration)
+                {
+                    float burnProgress = (cookTimer - cookDuration) / (burnDuration - cookDuration);
+                    ovenTimerImage.fillAmount = burnProgress;
+                    ovenTimerImage.color = Color.Lerp(Color.yellow, Color.red, burnProgress);
+                    // ovenTimerImage.transform.Rotate(Vector3.forward, -360f * Time.deltaTime / (burnDuration - cookDuration));
+                }
+            }
+
+            // float progress = 1f - (cookTimer / burnDuration); // 1 -> 0
+            // if (ovenTimerImage != null)
+            //     ovenTimerImage.fillAmount = Mathf.Clamp01(progress);
 
             if (cookTimer >= burnDuration)
             {
                 pizza.SetCookState(CookState.Burnt);
                 currentState = CookState.Burnt;
+                if (smokeEffect)
+                {
+                    smokeEffect.gameObject.SetActive(true);
+                    smokeEffect.Play();
+                }
                 break;
             }
             else if (cookTimer >= cookDuration && currentState == CookState.Raw)
@@ -97,14 +151,15 @@ public class Oven : MonoBehaviour, IInteractable
                 pizza.SetCookState(CookState.Cooked);
                 currentState = CookState.Cooked;
             }
-
             yield return null;
-        }
 
-        // Optionally hide the timer when done
+        }
+        // Clean up
         if (ovenTimerImage != null)
         {
             ovenTimerImage.fillAmount = 0f;
+            ovenTimerImage.color = Color.green;
+            ovenTimerImage.transform.localRotation = Quaternion.identity;
             ovenTimerImage.gameObject.SetActive(false);
         }
     }

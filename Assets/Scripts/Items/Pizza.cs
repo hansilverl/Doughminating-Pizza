@@ -21,6 +21,7 @@ public class Pizza : Ingredient
     public bool HasBacon => hasBacon;
     public bool HasPineapple => hasPineapple;
     public bool HasPepperoni => hasPepperoni;
+    public CookState GetCookLevel() => CookLevel;
 
     void Start()
     {
