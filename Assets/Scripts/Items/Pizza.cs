@@ -137,7 +137,7 @@ public class Pizza : Ingredient
             prefab = saucePrefab;
             relativeOffset = new Vector3(0f, 0.0124f, 0.003f);
             worldRotation = Quaternion.Euler(-90f, 0f, 0f);
-            localScale = new Vector3(1.472f, 1.55f, 1.472f);
+            localScale = new Vector3(1.55f, 1.55f, 1.472f);
             heightAdjustment = 0.005f; // Sauce needs less height
             break;
         case IngredientType.Cheese:
@@ -163,9 +163,9 @@ public class Pizza : Ingredient
             break;
         case IngredientType.Pepperoni:
             prefab = pepperoniPrefab;
-            relativeOffset = new Vector3(0.0025f, 0.033f, 0.002f);
+            relativeOffset = new Vector3(0.0025f, 0.03f, 0.0f);
             worldRotation = Quaternion.Euler(0f, 0f, 0f);
-            localScale = new Vector3(0.18f, 0.18f, 0.18f);
+            localScale = new Vector3(0.18f, 0.18f, 0.19f);
             heightAdjustment = 0.03f;
             break;
     }
