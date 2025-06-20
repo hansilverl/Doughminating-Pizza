@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18300837, g: 0.22869337, b: 0.30677772, a: 1}
+  m_IndirectSpecularColor: {r: 0.18300802, g: 0.22869262, b: 0.30677655, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -57940,9 +57940,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7132885647023285086, guid: dd02c6a21a04843498dd9aada1bef58d,
         type: 3}
+      propertyPath: baconPrefab
+      value: 
+      objectReference: {fileID: -8098169881513260187, guid: 2468918c3e305ef4da4204fe22326a51,
+        type: 3}
+    - target: {fileID: 7132885647023285086, guid: dd02c6a21a04843498dd9aada1bef58d,
+        type: 3}
+      propertyPath: saucePrefab
+      value: 
+      objectReference: {fileID: 3909769123014092384, guid: adb7c7843dffc2f4c9e08c145b28e7df,
+        type: 3}
+    - target: {fileID: 7132885647023285086, guid: dd02c6a21a04843498dd9aada1bef58d,
+        type: 3}
+      propertyPath: cheesePrefab
+      value: 
+      objectReference: {fileID: -8098169881513260187, guid: 465eccd961aa9214090491919f94f763,
+        type: 3}
+    - target: {fileID: 7132885647023285086, guid: dd02c6a21a04843498dd9aada1bef58d,
+        type: 3}
       propertyPath: ingredientName
       value: Pizza
       objectReference: {fileID: 0}
+    - target: {fileID: 7132885647023285086, guid: dd02c6a21a04843498dd9aada1bef58d,
+        type: 3}
+      propertyPath: pepperoniPrefab
+      value: 
+      objectReference: {fileID: -8098169881513260187, guid: c49313095c4c86d4cb3b0f1cd75e5cf9,
+        type: 3}
+    - target: {fileID: 7132885647023285086, guid: dd02c6a21a04843498dd9aada1bef58d,
+        type: 3}
+      propertyPath: pineapplePrefab
+      value: 
+      objectReference: {fileID: -8098169881513260187, guid: e3d42457bd49da44d97b1e69c432bd06,
+        type: 3}
     - target: {fileID: 7697652906340743626, guid: dd02c6a21a04843498dd9aada1bef58d,
         type: 3}
       propertyPath: m_Name
