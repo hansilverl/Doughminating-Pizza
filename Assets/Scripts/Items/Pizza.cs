@@ -150,7 +150,7 @@ public class Pizza : Ingredient
         case IngredientType.Bacon:
             prefab = baconPrefab;
             relativeOffset = new Vector3(-0.013f, 0.02f, -0.02f);
-            worldRotation = Quaternion.Euler(0f, 0f, 0f);
+            worldRotation = Quaternion.Euler(90f, 0f, 0f);
             localScale = new Vector3(0.19f, 0.23f, 0.2f);
             heightAdjustment = 0.03f;
             break;

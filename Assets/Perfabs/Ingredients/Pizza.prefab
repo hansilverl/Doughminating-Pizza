@@ -179,7 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handPositionOffset: {x: -0.075, y: 0.007, z: 0.344}
-  handRotationOffset: {x: 25, y: 20, z: 0}
+  handRotationOffset: {x: 205, y: 20, z: 0}
   defaultRotation: {x: -90, y: 0, z: 0}
   counterPositionOffset: 0
   ingredientName: Pizza
@@ -190,6 +190,11 @@ MonoBehaviour:
   hasBacon: 0
   hasPineapple: 0
   hasPepperoni: 0
+  saucePrefab: {fileID: 0}
+  cheesePrefab: {fileID: 0}
+  baconPrefab: {fileID: 0}
+  pineapplePrefab: {fileID: 0}
+  pepperoniPrefab: {fileID: 0}
 --- !u!64 &7056220659163187275
 MeshCollider:
   m_ObjectHideFlags: 0
