@@ -1,27 +1,175 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CustomerManager : MonoBehaviour   // class and file with the same name
 {
     [Header("Doors")]
-    public Transform entryDoor;    // people come here
-    public Transform exitDoor;     // leave from here
+    [SerializeField] public Transform entryDoor;    // people come here
+    [SerializeField] public Transform exitDoor;     // leave from here
     
     [Header("Seats & Spawning")]
-    public Transform[] seatTransforms;         // "chairs" points
-    public GameObject customerPrefab;          // prefab with CustomerController
-    public float spawnXOffset = -10f;
-    public float spawnInterval = 1f;
+    [SerializeField] private Transform[] seatTransforms;         // "chairs" points - will be auto-found if empty
+    [SerializeField] public GameObject customerPrefab;          // prefab with CustomerController
+    [SerializeField] public float spawnXOffset = -10f;
+    [SerializeField] public float spawnInterval = 1f;
+
+    [Header("Customer Limits")]
+    [SerializeField] private int maxCustomersEarly = 1;    // Up to 5 orders
+    [SerializeField] private int maxCustomersMid = 2;      // From 5 to 10 orders  
+    [SerializeField] private int maxCustomersLate = 3;     // From 10 orders (max = number of seats)
+    [SerializeField] private int ordersForMidTier = 5;     // When to increase to 2 customers
+    [SerializeField] private int ordersForLateTier = 10;   // When to increase to 3 customers
 
     [HideInInspector]
     public bool[] availableSeatForCustomers;
+    
+    // Order statistics
+    private static int completedOrders = 0;
+    private int currentCustomerLimit = 1;
+
+    public static CustomerManager Instance { get; private set; }
+
+    // Unity Editor Reset method - called when component is added or reset
+    void Reset()
+    {
+        // Set default values
+        spawnXOffset = -10f;
+        spawnInterval = 1f;
+        maxCustomersEarly = 1;
+        maxCustomersMid = 2;
+        maxCustomersLate = 3;
+        ordersForMidTier = 5;
+        ordersForLateTier = 10;
+        
+        Debug.Log("CustomerManager Reset() called - default values set");
+    }
 
     void Awake()
     {
-        availableSeatForCustomers = new bool[seatTransforms.Length];
-        for (int i = 0; i < availableSeatForCustomers.Length; i++)
-            availableSeatForCustomers[i] = true;
+        // Singleton pattern
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // Initialization with null protection
+        try
+        {
+            // Automatically find all seats if array is empty
+            if (seatTransforms == null || seatTransforms.Length == 0)
+            {
+                AutoFindSeats();
+            }
+            
+            // Additional check after auto-search
+            if (seatTransforms == null || seatTransforms.Length == 0)
+            {
+                Debug.LogError("No seats found! CustomerManager cannot function without seats.");
+                return;
+            }
+            
+            availableSeatForCustomers = new bool[seatTransforms.Length];
+            for (int i = 0; i < availableSeatForCustomers.Length; i++)
+                availableSeatForCustomers[i] = true;
+                
+            // Set initial customer limit
+            UpdateCustomerLimit();
+            
+            Debug.Log($"CustomerManager initialized with {seatTransforms.Length} seats, current limit: {currentCustomerLimit} customers");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Error initializing CustomerManager: {e.Message}");
+        }
     }
+
+    // Automatically find all seats in CustomerSpawnPoints
+    private void AutoFindSeats()
+    {
+        GameObject spawnPoints = GameObject.Find("CustomerSpawnPoints");
+        if (spawnPoints != null)
+        {
+            List<Transform> seats = new List<Transform>();
+            
+            // Find all child objects that start with "Seat_"
+            foreach (Transform child in spawnPoints.transform)
+            {
+                if (child.name.StartsWith("Seat_"))
+                {
+                    seats.Add(child);
+                }
+            }
+            
+            // Sort by name for correct order (Seat_0, Seat_1, etc.)
+            seats.Sort((a, b) => a.name.CompareTo(b.name));
+            
+            seatTransforms = seats.ToArray();
+            Debug.Log($"Auto-found {seatTransforms.Length} seats: {string.Join(", ", System.Array.ConvertAll(seatTransforms, s => s.name))}");
+        }
+        else
+        {
+            Debug.LogError("CustomerSpawnPoints object not found! Please create it or manually assign seat transforms.");
+        }
+    }
+
+    // Update customer limit based on number of orders
+    private void UpdateCustomerLimit()
+    {
+        if (completedOrders < ordersForMidTier)
+        {
+            currentCustomerLimit = maxCustomersEarly;
+        }
+        else if (completedOrders < ordersForLateTier)
+        {
+            currentCustomerLimit = maxCustomersMid;
+        }
+        else
+        {
+            currentCustomerLimit = maxCustomersLate;
+        }
+    }
+
+    // Get current number of customers in restaurant
+    private int GetCurrentCustomerCount()
+    {
+        int count = 0;
+        for (int i = 0; i < availableSeatForCustomers.Length; i++)
+        {
+            if (!availableSeatForCustomers[i]) // Seat is occupied
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Public method to increment completed orders counter
+    public static void AddCompletedOrder()
+    {
+        completedOrders++;
+        Debug.Log($"Order completed! Total orders: {completedOrders}");
+        
+        if (Instance != null)
+        {
+            int oldLimit = Instance.currentCustomerLimit;
+            Instance.UpdateCustomerLimit();
+            
+            if (Instance.currentCustomerLimit != oldLimit)
+            {
+                Debug.Log($"Customer limit increased from {oldLimit} to {Instance.currentCustomerLimit}!");
+            }
+        }
+    }
+
+    // Get current statistics (for UI or debugging)
+    public static int GetCompletedOrders() => completedOrders;
+    public int GetCurrentCustomerLimit() => currentCustomerLimit;
 
     void Start()
     {
@@ -32,35 +180,108 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
     {
         while (true)
         {
-            // find the _first_ free space
-            for (int i = 0; i < seatTransforms.Length; i++)
+            // Check if customer limit is not exceeded
+            int currentCustomers = GetCurrentCustomerCount();
+            
+            if (currentCustomers < currentCustomerLimit)
             {
-                if (availableSeatForCustomers[i])
+                // Get list of all available seats
+                List<int> availableSeats = GetAvailableSeats();
+                
+                // If there are available seats, choose random one
+                if (availableSeats.Count > 0)
                 {
-                    SpawnCustomerAtSeat(i);
-                    // after spawning we wait exactly as long as specified in the inspector
-                    yield return new WaitForSeconds(spawnInterval);
-                    // break out of the loop to spawn only one at a time
-                    break;
+                    int randomSeatIndex = availableSeats[Random.Range(0, availableSeats.Count)];
+                    SpawnCustomerAtSeat(randomSeatIndex);
+                    
+                    Debug.Log($"Spawned customer ({currentCustomers + 1}/{currentCustomerLimit}). Orders completed: {completedOrders}");
                 }
             }
-            // immediately on the next iteration we look for free space again
-            yield return null;
+            
+            // after spawning we wait exactly as long as specified in the inspector
+            yield return new WaitForSeconds(spawnInterval);
         }
+    }
+
+    // New method to get list of available seats
+    private List<int> GetAvailableSeats()
+    {
+        List<int> availableSeats = new List<int>();
+        
+        for (int i = 0; i < availableSeatForCustomers.Length; i++)
+        {
+            if (availableSeatForCustomers[i])
+            {
+                availableSeats.Add(i);
+            }
+        }
+        
+        Debug.Log($"Available seats: [{string.Join(", ", availableSeats)}] out of {availableSeatForCustomers.Length} total seats");
+        return availableSeats;
     }
 
     void SpawnCustomerAtSeat(int seatIndex)
     {
-        Vector3 spawnPos = entryDoor.position;
+        // Data validity checks
+        if (availableSeatForCustomers == null || seatTransforms == null)
+        {
+            Debug.LogError("CustomerManager data is null! Cannot spawn customer.");
+            return;
+        }
+        
+        if (seatIndex < 0 || seatIndex >= availableSeatForCustomers.Length || seatIndex >= seatTransforms.Length)
+        {
+            Debug.LogError($"Invalid seat index {seatIndex}! Available seats: 0-{availableSeatForCustomers.Length - 1}");
+            return;
+        }
+        
+        // Additional check that seat is actually available
+        if (!availableSeatForCustomers[seatIndex])
+        {
+            Debug.LogWarning($"Trying to spawn customer at already occupied seat {seatIndex}!");
+            return;
+        }
+        
+        if (customerPrefab == null)
+        {
+            Debug.LogError("Customer prefab is null! Cannot spawn customer.");
+            return;
+        }
+        
+        Vector3 spawnPos = entryDoor != null ? entryDoor.position : Vector3.zero;
+        spawnPos.y = 1f; // Elevate customer so feet touch floor (capsule height=2, center at +1)
 
         GameObject go = Instantiate(customerPrefab, spawnPos, Quaternion.identity);
         var ctrl = go.GetComponent<CustomerController>();
-        ctrl.mySeat      = seatIndex;
-        ctrl.destination = seatTransforms[seatIndex].position;
+        if (ctrl == null)
+        {
+            Debug.LogError("CustomerController component not found on spawned customer!");
+            Destroy(go);
+            return;
+        }
+        
+        ctrl.mySeat = seatIndex;
+        
+        // Set destination so feet touch floor with small random offset
+        Vector3 destination = seatTransforms[seatIndex] != null ? seatTransforms[seatIndex].position : Vector3.zero;
+        destination.y = 1f; // Elevate destination so feet touch floor
+        
+        // Add random offset so customers don't sit in same spot
+        float randomOffsetX = Random.Range(-1.5f, 1.5f);  // Increased from ±0.5 to ±1.5
+        float randomOffsetZ = Random.Range(-1.5f, 1.5f);  // Increased from ±0.5 to ±1.5
+        destination.x += randomOffsetX;
+        destination.z += randomOffsetZ;
+        
+        ctrl.destination = destination;
+        
         // we pass the doors
-        ctrl.entryPoint  = entryDoor;
-        ctrl.exitPoint   = exitDoor;
+        ctrl.entryPoint = entryDoor;
+        ctrl.exitPoint = exitDoor;
 
+        // Immediately occupy the seat
         availableSeatForCustomers[seatIndex] = false;
+        
+        string seatName = seatTransforms[seatIndex] != null ? seatTransforms[seatIndex].name : $"Seat_{seatIndex}";
+        Debug.Log($"Spawned customer at seat {seatIndex} ({seatName}) with offset ({randomOffsetX:F2}, {randomOffsetZ:F2})");
     }
 }

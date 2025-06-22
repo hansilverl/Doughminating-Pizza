@@ -18,7 +18,7 @@ public class SC_Player : MonoBehaviour
     public Camera playerCamera;
 
     [Header("Interaction Settings")]
-    public float interactionDistance = 3f;
+    public float interactionDistance = 20f;
     public TMP_Text interactionTextUI;
     public GameObject interactionPanel;
     public GameObject toastPanel;
@@ -112,28 +112,46 @@ public class SC_Player : MonoBehaviour
         if (currentInteractable != null)
             ToggleOutline(currentInteractable, false);
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance))
+        
+        // Use extended interaction distance for better customer interaction
+        float maxDistance = interactionDistance * 2f; // 2x multiplier for very comfortable interaction
+        
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance))
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>()
                                        ?? hit.collider.GetComponentInParent<IInteractable>();
 
             if (interactable != null)
             {
-                currentInteractable = interactable;
-                string interactionText = interactable.getInteractionText();
-
-                ToggleOutline(currentInteractable, true);
-                if (!string.IsNullOrEmpty(interactionText))
+                // Check if it's a customer and use their specific interaction distance
+                CustomerController customer = interactable as CustomerController;
+                float actualDistance = Vector3.Distance(playerCamera.transform.position, hit.point);
+                float requiredDistance = customer != null ? customer.GetInteractionDistance() : interactionDistance;
+                
+                if (actualDistance <= requiredDistance)
                 {
-                    interactionTextUI.text = interactionText;
-                    interactionPanel.SetActive(true);
-                }
-                else
-                {
-                    interactionPanel.SetActive(false);
-                }
+                    currentInteractable = interactable;
+                    string interactionText = interactable.getInteractionText();
 
-                return;
+                    // Debug info for customer interaction
+                    if (customer != null)
+                    {
+                        Debug.Log($"Customer interaction: Distance={actualDistance:F1}m, Required={requiredDistance:F1}m");
+                    }
+
+                    ToggleOutline(currentInteractable, true);
+                    if (!string.IsNullOrEmpty(interactionText))
+                    {
+                        interactionTextUI.text = interactionText;
+                        interactionPanel.SetActive(true);
+                    }
+                    else
+                    {
+                        interactionPanel.SetActive(false);
+                    }
+
+                    return;
+                }
             }
         }
 
@@ -195,6 +213,23 @@ public class SC_Player : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             _actions.Player.Look.Enable();
+        }
+    }
+
+    // Debug visualization of interaction distance
+    void OnDrawGizmosSelected()
+    {
+        if (playerCamera != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(playerCamera.transform.position, interactionDistance);
+            
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(playerCamera.transform.position, interactionDistance * 1.5f);
+            
+            // Draw interaction ray
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * (interactionDistance * 1.5f));
         }
     }
 }

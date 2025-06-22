@@ -7,7 +7,7 @@ public class PlayerInteraction : MonoBehaviour
 {
     // SerializeField allows you to modify the variable in the Unity Inspector
     // without making it public
-    [SerializeField] private float interactionDistance = 3f; // Distance within which the player can interact with objects
+    [SerializeField] private float interactionDistance = 20f; // Distance within which the player can interact with objects
     [SerializeField] private Camera playerCamera;
     [SerializeField] private TMP_Text interactionTextUI;// Text displayed when the player is close to an interactable object 
     [SerializeField] private GameObject interactionPanel; // Panel that contains the interaction text
