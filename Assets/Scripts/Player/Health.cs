@@ -1,0 +1,76 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Health : MonoBehaviour
+{
+    [Header("Player Health Settings")]
+    [SerializeField] private int maxHealth = 3;
+    [SerializeField] private int health = 3; // Current health of the player
+    [SerializeField] private GameObject healthUI; // Prefab for the health bar UI
+    [SerializeField] private GameObject healthy;
+    [SerializeField] private GameObject ruined;
+    [SerializeField] private bool isGodMode = false;
+
+    private List<GameObject> healthBar = new List<GameObject>();
+
+    public void updateHealth()
+    {
+        foreach (var icon in healthBar)
+        {
+            Destroy(icon);
+        }
+        healthBar.Clear();
+
+        for (int i = 0; i < maxHealth; i++)
+        {
+            GameObject icon;
+            if (i < health)
+                icon = Instantiate(healthy, healthUI.transform);
+            else
+                icon = Instantiate(ruined, healthUI.transform);
+            healthBar.Add(icon);
+        }
+
+    }
+    void Start()
+    {
+        updateHealth();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (isGodMode)
+        {
+            Debug.Log("God mode is active, no damage taken.");
+            return; // Skip damage if in god mode
+        }
+        health -= damage;
+        if (health < 0)
+        {
+            health = 0; // Ensure health doesn't go below 0}
+            // optionally trigger game over logic here
+        }
+        updateHealth();
+    }
+
+    public void addMaxHealth(int amount)
+    {
+        maxHealth += amount;
+        health += amount; // Increase current health as well
+        updateHealth();
+    }
+
+    public void ToggleGodMode()
+    {
+        isGodMode = !isGodMode;
+        Debug.Log("God mode is now " + (isGodMode ? "enabled" : "disabled"));
+    }
+}
