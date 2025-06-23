@@ -719,7 +719,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -30}
+  m_AnchoredPosition: {x: 145, y: -20}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &13359373
@@ -8850,9 +8850,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1344259016}
-    m_AddedComponents: [{targetCorrespondingSourceObject: {fileID: 6317359355782462263,
-          guid: 7941f78cbe0644820b720913f447c28f, type: 3}, insertIndex: -1, addedObject: {
-          fileID: 1438855677}}]
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6317359355782462263, guid: 7941f78cbe0644820b720913f447c28f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1438855677}
   m_SourcePrefab: {fileID: 100100000, guid: 7941f78cbe0644820b720913f447c28f, type: 3}
 --- !u!1001 &409745218
 PrefabInstance:
@@ -12391,11 +12393,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 3
-  health: 2
+  health: 3
   healthUI: {fileID: 13359371}
   healthy: {fileID: 3959336421423576803, guid: c74c3852fbb439d448c2b023b0164e62, type: 3}
   ruined: {fileID: 5356804802077677655, guid: c29b85dce2e303342918c836fe64c551, type: 3}
-  isGodMode: 1
+  isGodMode: 0
+  godModeToggle: {fileID: 1852170829}
 --- !u!1001 &546328125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44565,19 +44568,7 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 545250882}
-        m_TargetAssemblyTypeName: Health, Assembly-CSharp
-        m_MethodName: ToggleGodMode
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
   m_IsOn: 0
 --- !u!1001 &1853372965
 PrefabInstance:
@@ -56757,7 +56748,7 @@ PrefabInstance:
     - target: {fileID: 4399998574772414107, guid: c29b85dce2e303342918c836fe64c551,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4399998574772414107, guid: c29b85dce2e303342918c836fe64c551,
         type: 3}
@@ -56767,7 +56758,7 @@ PrefabInstance:
     - target: {fileID: 4399998574772414107, guid: c29b85dce2e303342918c836fe64c551,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4399998574772414107, guid: c29b85dce2e303342918c836fe64c551,
         type: 3}
@@ -56817,12 +56808,12 @@ PrefabInstance:
     - target: {fileID: 4399998574772414107, guid: c29b85dce2e303342918c836fe64c551,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4399998574772414107, guid: c29b85dce2e303342918c836fe64c551,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 4399998574772414107, guid: c29b85dce2e303342918c836fe64c551,
         type: 3}
@@ -56890,7 +56881,7 @@ PrefabInstance:
     - target: {fileID: 7274130672649131143, guid: c74c3852fbb439d448c2b023b0164e62,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7274130672649131143, guid: c74c3852fbb439d448c2b023b0164e62,
         type: 3}
@@ -56900,7 +56891,7 @@ PrefabInstance:
     - target: {fileID: 7274130672649131143, guid: c74c3852fbb439d448c2b023b0164e62,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7274130672649131143, guid: c74c3852fbb439d448c2b023b0164e62,
         type: 3}
@@ -56950,12 +56941,12 @@ PrefabInstance:
     - target: {fileID: 7274130672649131143, guid: c74c3852fbb439d448c2b023b0164e62,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7274130672649131143, guid: c74c3852fbb439d448c2b023b0164e62,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 7274130672649131143, guid: c74c3852fbb439d448c2b023b0164e62,
         type: 3}

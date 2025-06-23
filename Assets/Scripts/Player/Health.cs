@@ -7,11 +7,12 @@ public class Health : MonoBehaviour
 {
     [Header("Player Health Settings")]
     [SerializeField] private int maxHealth = 3;
-    [SerializeField] private int health = 3; // Current health of the player
+    [SerializeField, Tooltip("Current health of the player (cannot exceed maxHealth)")] private int health = 3;  // Current health of the player
     [SerializeField] private GameObject healthUI; // Prefab for the health bar UI
     [SerializeField] private GameObject healthy;
     [SerializeField] private GameObject ruined;
     [SerializeField] private bool isGodMode = false;
+    [SerializeField] private Toggle godModeToggle; // Toggle for enabling/disabling god mode
 
     private List<GameObject> healthBar = new List<GameObject>();
 
@@ -37,6 +38,11 @@ public class Health : MonoBehaviour
     void Start()
     {
         updateHealth();
+
+        if (godModeToggle != null)
+        {
+            godModeToggle.onValueChanged.AddListener(delegate { ToggleGodMode(godModeToggle.isOn); });
+        }
     }
 
     // Update is called once per frame
@@ -68,9 +74,16 @@ public class Health : MonoBehaviour
         updateHealth();
     }
 
-    public void ToggleGodMode()
+    private void ToggleGodMode(bool isActive)
     {
-        isGodMode = !isGodMode;
-        Debug.Log("God mode is now " + (isGodMode ? "enabled" : "disabled"));
+        isGodMode = isActive;
+        if (isGodMode)
+        {
+            Debug.Log("God mode activated.");
+        }
+        else
+        {
+            Debug.Log("God mode deactivated.");
+        }
     }
 }
