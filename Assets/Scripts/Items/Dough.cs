@@ -8,14 +8,11 @@ public class Dough : Ingredient
     public override void Interact()
     {
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
-        if (playerHand != null && playerHand.IsHoldingItem)
+        if (playerHand.IsHoldingItem && playerHand.HeldItem.GetComponent<Tool>() != null)
         {
-            GameObject held = playerHand.HeldItem;
-            Tool item = held.GetComponent<Tool>();
-            if (item != null && item is RollingPin)
+            Tool item = playerHand.HeldItem.GetComponent<Tool>();
+            if (item is RollingPin)
             {
-                Debug.Log("Rolling out dough");
-                Debug.Log(this.gameObject.transform.localPosition);
                 GameObject pizza = Instantiate(pizzaPrefab, this.gameObject.transform.position, Quaternion.identity);
                 pizza.transform.SetParent(this.gameObject.transform.parent);
                 Vector3 defaultRotation = pizza.GetComponent<IPickable>().GetDefaultRotation();

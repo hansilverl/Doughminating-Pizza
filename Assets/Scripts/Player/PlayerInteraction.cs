@@ -7,7 +7,7 @@ public class PlayerInteraction : MonoBehaviour
 {
     // SerializeField allows you to modify the variable in the Unity Inspector
     // without making it public
-    [SerializeField] private float interactionDistance = 3f; // Distance within which the player can interact with objects
+    [SerializeField] private float interactionDistance = 20f; // Distance within which the player can interact with objects
     [SerializeField] private Camera playerCamera;
     [SerializeField] private TMP_Text interactionTextUI;// Text displayed when the player is close to an interactable object 
     [SerializeField] private GameObject interactionPanel; // Panel that contains the interaction text
@@ -35,39 +35,41 @@ public class PlayerInteraction : MonoBehaviour
         HandleInteractionCheck();
         HandleInteractionInput();
     }
-
     void HandleInteractionCheck()
-{
-    Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-    RaycastHit hit;
-
-    if (Physics.Raycast(ray, out hit, interactionDistance))
     {
-        IInteractable interactable = hit.collider.GetComponent<IInteractable>()
-                                  ?? hit.collider.GetComponentInParent<IInteractable>();
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        RaycastHit hit;
 
-        if (interactable != null)
+        if (Physics.Raycast(ray, out hit, interactionDistance))
         {
-            currentInteractable = interactable;
-            string interactionText = interactable.getInteractionText();
+            IInteractable interactable = hit.collider.GetComponent<IInteractable>()
+                                      ?? hit.collider.GetComponentInParent<IInteractable>();
 
-            if (!string.IsNullOrEmpty(interactionText))
+            if (interactable != null)
             {
-                interactionTextUI.text = interactionText;
-                interactionPanel.SetActive(true); // ✅ Show the whole panel
-            }
-            else
-            {
-                interactionPanel.SetActive(false); // 🔒 Hide if text is empty
-            }
+                currentInteractable = interactable;
+                string interactionText = interactable.getInteractionText();
 
-            return;
+                if (!string.IsNullOrEmpty(interactionText))
+                {
+                    interactionTextUI.text = interactionText;
+                    interactionPanel.SetActive(true); // ✅ Show the whole panel
+                }
+                else
+                {
+                    interactionPanel.SetActive(false); // 🔒 Hide if text is empty
+                }
+
+                return;
+            }
         }
-    }
+        if (currentInteractable != null)
+        {
+            currentInteractable = null;
 
-    currentInteractable = null;
-    interactionPanel.SetActive(false);
-}
+        }
+        interactionPanel.SetActive(false);
+    }
 
 
     void HandleInteractionInput()

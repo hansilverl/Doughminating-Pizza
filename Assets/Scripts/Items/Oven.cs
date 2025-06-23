@@ -1,80 +1,158 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Oven : MonoBehaviour, IInteractable
 {
-    // serializeField is used to expose private variables in the Unity Inspector
-    [SerializeField] private Transform cookingSlot; // Where the pizza will sit
-    [SerializeField] private float cookDuration = 5f;     // Time to Cooked (5 seconds)
-    [SerializeField] private float burnDuration = 10f;    // Time time to Burnt (10 seconds)
+    [Header("UI Elements")]
+    [SerializeField] private Image ovenTimerImage;
 
-    private GameObject currentItem;
+    [Header("Cooking Settings")]
+    [SerializeField] private Vector3 pizzaPlacementPosition = new Vector3(-0.7f, 1.633f, 20.5f);
+    [SerializeField] private float cookDuration = 5f;
+    [SerializeField] private float burnDuration = 10f;
+
+
+
+    private GameObject currentPizza;
     private float cookTimer;
     private bool isCooking;
-
     private CookState currentState = CookState.Raw;
+    [SerializeField] private ParticleSystem smokeEffect;
 
     public void Interact()
     {
-        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
-
+        PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
         if (playerHand == null) return;
 
-        if (currentItem == null && playerHand.IsHoldingItem)
+        if (currentPizza == null && playerHand.IsHoldingItem)
         {
-            // Place pizza in oven
             Pizza pizza = playerHand.HeldItem.GetComponent<Pizza>();
             if (pizza != null)
             {
                 playerHand.Drop();
-                currentItem = pizza.gameObject;
-                currentItem.transform.SetParent(cookingSlot);
-                currentItem.transform.localPosition = Vector3.zero;
-                currentItem.transform.localRotation = Quaternion.identity;
+                currentPizza = pizza.gameObject;
+
+                // Place it in the world — don't parent or use local position
+                currentPizza.transform.position = pizzaPlacementPosition;
+                Vector3 defaultRotation = currentPizza.GetComponent<IPickable>()?.GetDefaultRotation() ?? Vector3.zero;
+                currentPizza.transform.rotation = Quaternion.Euler(defaultRotation.x, defaultRotation.y, defaultRotation.z);
+
                 StartCoroutine(CookPizza(pizza));
             }
+            else
+            {
+                playerHand.InvalidAction("You can only place a pizza!", 2f);
+            }
         }
-        else if (currentItem != null && !playerHand.IsHoldingItem)
+        else if (currentPizza != null && playerHand.IsHoldingItem)
         {
-            // Take pizza out of oven
-            currentItem.transform.SetParent(null);
-            playerHand.PickUp(currentItem);
-            currentItem = null;
+            playerHand.InvalidAction("There's an item in the oven already!", 2f);
+        }
+        else if (currentPizza != null && !playerHand.IsHoldingItem)
+        {
+            currentPizza.transform.SetParent(null); // Just in case it ever was parented
+            playerHand.PickUp(currentPizza);
+            currentPizza = null;
             isCooking = false;
             StopAllCoroutines();
+
+            if (ovenTimerImage != null)
+            {
+                ovenTimerImage.fillAmount = 0f;
+                ovenTimerImage.color = Color.green;
+                ovenTimerImage.transform.localRotation = Quaternion.identity;
+                ovenTimerImage.gameObject.SetActive(false);
+            }
+            if (smokeEffect)
+                smokeEffect.gameObject.SetActive(false);
         }
     }
 
     public string getInteractionText()
     {
-        if (currentItem == null)
-            return "Press 'E' to place pizza in oven";
-        else
-            return "Press 'E' to take pizza out";
+        PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
+
+        if (currentPizza == null && playerHand != null && playerHand.IsHoldingItem)
+        {
+            if (playerHand.HeldItem.GetComponent<Pizza>() != null)
+                return "Press 'E' to place pizza in oven";
+        }
+        else if (currentPizza != null)
+        {
+            return "Press 'E' to remove pizza";
+        }
+        return "";
     }
 
     private IEnumerator CookPizza(Pizza pizza)
     {
         isCooking = true;
-        cookTimer = 0f;
+        currentState = pizza.GetCookLevel();
+        cookTimer = currentState == CookState.Raw ? 0f : currentState == CookState.Cooked ? cookDuration : burnDuration;
+
+        if (ovenTimerImage != null)
+        {
+            ovenTimerImage.fillAmount = 1f;
+            ovenTimerImage.gameObject.SetActive(true);
+            ovenTimerImage.color = Color.green;
+            ovenTimerImage.transform.localRotation = Quaternion.identity;
+        }
 
         while (isCooking)
         {
             cookTimer += Time.deltaTime;
 
+            if (ovenTimerImage != null)
+            {
+                // Phase 1: Cooking
+                if (cookTimer <= cookDuration)
+                {
+                    float cookProgress = cookTimer / cookDuration;
+                    ovenTimerImage.fillAmount = 1f - cookProgress;
+                    ovenTimerImage.color = Color.green;
+                    // ovenTimerImage.transform.Rotate(Vector3.forward, -360f * Time.deltaTime / cookDuration);
+                }
+                // Phase 2: Burning
+                else if (cookDuration <= cookTimer && cookTimer <= burnDuration)
+                {
+                    float burnProgress = (cookTimer - cookDuration) / (burnDuration - cookDuration);
+                    ovenTimerImage.fillAmount = burnProgress;
+                    ovenTimerImage.color = Color.Lerp(Color.yellow, Color.red, burnProgress);
+                    // ovenTimerImage.transform.Rotate(Vector3.forward, -360f * Time.deltaTime / (burnDuration - cookDuration));
+                }
+            }
+
+            // float progress = 1f - (cookTimer / burnDuration); // 1 -> 0
+            // if (ovenTimerImage != null)
+            //     ovenTimerImage.fillAmount = Mathf.Clamp01(progress);
+
             if (cookTimer >= burnDuration)
             {
                 pizza.SetCookState(CookState.Burnt);
                 currentState = CookState.Burnt;
-                yield break;
+                if (smokeEffect)
+                {
+                    smokeEffect.gameObject.SetActive(true);
+                    smokeEffect.Play();
+                }
+                break;
             }
-            else if (cookTimer >= cookDuration)
+            else if (cookTimer >= cookDuration && currentState == CookState.Raw)
             {
                 pizza.SetCookState(CookState.Cooked);
                 currentState = CookState.Cooked;
             }
-
             yield return null;
+
+        }
+        // Clean up
+        if (ovenTimerImage != null)
+        {
+            ovenTimerImage.fillAmount = 0f;
+            ovenTimerImage.color = Color.green;
+            ovenTimerImage.transform.localRotation = Quaternion.identity;
+            ovenTimerImage.gameObject.SetActive(false);
         }
     }
 }

@@ -16,7 +16,7 @@ public class IngredientFactory : MonoBehaviour, IInteractable
         }
         PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
         if(playerHand.IsHoldingItem) {
-            Debug.Log("Player is already holding an item. Cannot spawn another.");
+            playerHand.InvalidAction("You are already holding an item!", 2f);
             return;
         }
 
