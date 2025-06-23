@@ -7,6 +7,7 @@ using TMPro;
 public class SC_Player : MonoBehaviour
 
 {
+
     [Header("Pause Menu")]
     public GameObject pauseMenuUI;
     // public UnityEngine.UI.Image resumeButtonImage; // Reference to the button image for click effect
