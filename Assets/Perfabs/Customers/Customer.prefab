@@ -197,7 +197,7 @@ MonoBehaviour:
   patienceBarBG: {fileID: 7431185914513104886}
   requestBubble: {fileID: 799377471712712061}
   money3dText: {fileID: 0}
-  mySeat: 2
+  mySeat: -1
   destination: {x: 0, y: 0, z: 0}
   iconRowTransform: {fileID: 5020533489196514791}
 --- !u!82 &3661271284506916789

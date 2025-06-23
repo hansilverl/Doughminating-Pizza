@@ -198,6 +198,8 @@ public class CustomerController : MonoBehaviour, IInteractable
     
     IEnumerator goToSeat()
     {
+        Debug.Log($"{customerName} is going to seat {mySeat} at position {destination}");
+        
         // Until we got to the "chair"
         while (Vector3.Distance(transform.position, destination) > 0.1f)
         {
@@ -210,6 +212,8 @@ public class CustomerController : MonoBehaviour, IInteractable
         requestBubble.SetActive(true);
         patienceBarFG.SetActive(true);
         patienceBarBG.SetActive(true);
+        
+        Debug.Log($"{customerName} has reached seat {mySeat} and is now seated");
     }
 
     void Update()
