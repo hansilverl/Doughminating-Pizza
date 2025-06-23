@@ -77,6 +77,9 @@ public class CustomerController : MonoBehaviour, IInteractable
     private List<System.Type> wantedIngredients = new();  // what ingredients does this customer want?
     private GameObject[] ingredientIcons;       // visual representation of wanted ingredients
     private bool patienceBarSliderFlag;         // flag to control patience bar animation
+    
+    // Health system reference
+    private Health playerHealth;
 
     // Floor level constant - where customer feet should be
     private const float FLOOR_LEVEL = 1f;
@@ -94,6 +97,13 @@ public class CustomerController : MonoBehaviour, IInteractable
     void Awake()
     {
         manager = FindObjectOfType<CustomerManager>();
+        
+        // Find the player's health component
+        playerHealth = FindObjectOfType<Health>();
+        if (playerHealth == null)
+        {
+            Debug.LogWarning("Player Health component not found! Health damage will not work.");
+        }
         
         startingPosition = entryPoint != null 
             ? entryPoint.position 
@@ -289,6 +299,14 @@ public class CustomerController : MonoBehaviour, IInteractable
         }
 
         patienceBarBG.SetActive(false);
+        
+        // Take damage when customer leaves due to impatience
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(1);
+            Debug.Log($"Player lost 1 health because {customerName} left due to impatience");
+        }
+        
         StartCoroutine(leave());
     }
 
@@ -388,8 +406,8 @@ public class CustomerController : MonoBehaviour, IInteractable
         wantedIngredients.Add(typeof(Sauce));
         wantedIngredients.Add(typeof(Cheese));
 
-        // Add 0-2 random toppings
-        int numToppings = Random.Range(0, 3); // 0, 1, or 2 toppings
+        // Add 0-3 random toppings (now can include all toppings)
+        int numToppings = Random.Range(0, 4); // 0, 1, 2, or 3 toppings
         List<System.Type> availableToppings = new List<System.Type>
         {
             typeof(Bacon),
@@ -551,6 +569,13 @@ public class CustomerController : MonoBehaviour, IInteractable
             {
                 renderer.material = customerMoods[moodIndex];
             }
+        }
+        
+        // Take damage for giving wrong order
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(1);
+            Debug.Log($"Player lost 1 health for giving wrong order to {customerName}");
         }
         
         playSfx(orderIsNotOkSfx);
@@ -794,7 +819,7 @@ public class CustomerController : MonoBehaviour, IInteractable
             Pizza pizza = playerHand.HeldItem.GetComponent<Pizza>();
             if (pizza != null)
             {
-                return $"[E] Give pizza to {firstName}\nWants: {GetWantedIngredientsString()}";
+                return $"Give pizza to {firstName}\nWants: {GetWantedIngredientsString()}";
             }
             else
             {
