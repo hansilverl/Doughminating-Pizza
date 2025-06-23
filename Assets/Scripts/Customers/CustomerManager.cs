@@ -74,9 +74,9 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
                 return;
             }
             
-            availableSeatForCustomers = new bool[seatTransforms.Length];
-            for (int i = 0; i < availableSeatForCustomers.Length; i++)
-                availableSeatForCustomers[i] = true;
+        availableSeatForCustomers = new bool[seatTransforms.Length];
+        for (int i = 0; i < availableSeatForCustomers.Length; i++)
+            availableSeatForCustomers[i] = true;
                 
             // Set initial customer limit
             UpdateCustomerLimit();
@@ -88,7 +88,7 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
             Debug.LogError($"Error initializing CustomerManager: {e.Message}");
         }
     }
-    
+
     void Start()
     {
         // Subscribe to level changes from RestaurantGameManager
@@ -249,7 +249,7 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
                 
                 // If there are available seats, choose random one
                 if (availableSeats.Count > 0)
-                {
+            {
                     int randomSeatIndex = availableSeats[Random.Range(0, availableSeats.Count)];
                     SpawnCustomerAtSeat(randomSeatIndex);
                     
@@ -273,8 +273,8 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
             if (availableSeatForCustomers[i])
             {
                 availableSeats.Add(i);
+                }
             }
-        }
         
         Debug.Log($"Available seats: [{string.Join(", ", availableSeats)}] out of {availableSeatForCustomers.Length} total seats");
         return availableSeats;
