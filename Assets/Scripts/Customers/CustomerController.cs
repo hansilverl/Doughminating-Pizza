@@ -588,6 +588,20 @@ public class CustomerController : MonoBehaviour, IInteractable
         if (isLeaving) yield break;
         isLeaving = true;
 
+        // Immediately destroy ingredient icons when customer starts leaving
+        if (ingredientIcons != null)
+        {
+            for (int i = 0; i < ingredientIcons.Length; i++)
+            {
+                if (ingredientIcons[i] != null)
+                {
+                    Destroy(ingredientIcons[i]);
+                }
+            }
+            ingredientIcons = null;
+            Debug.Log($"{customerName}: Ingredient icons removed");
+        }
+
         // UI closing animations…
         StartCoroutine(animate(Time.time, patienceBarBG, 0.7f, 0.8f));
         yield return new WaitForSeconds(0.3f);  
