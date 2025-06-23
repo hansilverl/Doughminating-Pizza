@@ -12,6 +12,10 @@ public class SC_Player : MonoBehaviour
     public GameObject pauseMenuUI;
     // public UnityEngine.UI.Image resumeButtonImage; // Reference to the button image for click effect
     private bool isPaused = false;
+    
+    [Header("Finish Menu")]
+    public GameObject finishMenuUI;
+    private bool isGameOver = false;
 
     [Header("Player Settings")]
     public float moveSpeed = 5f;
@@ -62,6 +66,9 @@ public class SC_Player : MonoBehaviour
 
     void Update()
     {
+        // Don't handle player input if game is over
+        if (isGameOver) return;
+        
         HandleLook();
         HandleInteractionCheck();
         HandleMovement();
@@ -166,10 +173,61 @@ public class SC_Player : MonoBehaviour
 
     void HandleInteractionInput()
     {
-        if (currentInteractable != null && !isPaused)
+        if (currentInteractable != null && !isPaused && !isGameOver)
         {
             currentInteractable.Interact();
         }
+    }
+    
+    public void ShowFinishMenu()
+    {
+        isGameOver = true;
+        Time.timeScale = 0f; // Pause the game
+        
+        // Hide other UI elements
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+        if (interactionPanel != null) interactionPanel.SetActive(false);
+        if (toastPanel != null) toastPanel.SetActive(false);
+        
+        // Show finish menu
+        if (finishMenuUI != null) finishMenuUI.SetActive(true);
+        
+        // Show cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        _actions.Player.Look.Disable(); // Freeze mouse movement
+        
+        Debug.Log("Game Over! Finish Menu displayed.");
+    }
+    
+    public void RestartGame()
+    {
+        // Reset game state
+        isGameOver = false;
+        isPaused = false;
+        Time.timeScale = 1f;
+        
+        // Hide finish menu
+        if (finishMenuUI != null) finishMenuUI.SetActive(false);
+        
+        // Reset cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        _actions.Player.Look.Enable();
+        
+        // Reload current scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+    
+    public void QuitToMainMenu()
+    {
+        // Reset game state
+        isGameOver = false;
+        isPaused = false;
+        Time.timeScale = 1f;
+        
+        // Load main menu scene (you can change this to your main menu scene name)
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0); // Assuming main menu is scene 0
     }
 
     public void PlayClickEffect(RectTransform buttonTransform)
@@ -196,6 +254,9 @@ public class SC_Player : MonoBehaviour
 
     void TogglePauseMenu()
     {
+        // Don't allow pausing if game is over
+        if (isGameOver) return;
+        
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0f : 1f;
         if (isPaused)

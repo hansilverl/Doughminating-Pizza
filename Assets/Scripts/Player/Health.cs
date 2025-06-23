@@ -14,6 +14,7 @@ public class Health : MonoBehaviour
     [SerializeField] private bool isGodMode = false;
 
     private List<GameObject> healthBar = new List<GameObject>();
+    private SC_Player playerController;
 
     public void updateHealth()
     {
@@ -36,6 +37,11 @@ public class Health : MonoBehaviour
     }
     void Start()
     {
+        playerController = FindObjectOfType<SC_Player>();
+        if (playerController == null)
+        {
+            Debug.LogWarning("SC_Player not found! Game Over functionality will not work.");
+        }
         updateHealth();
     }
 
@@ -53,10 +59,18 @@ public class Health : MonoBehaviour
             return; // Skip damage if in god mode
         }
         health -= damage;
-        if (health < 0)
+        if (health <= 0)
         {
-            health = 0; // Ensure health doesn't go below 0}
-            // optionally trigger game over logic here
+            health = 0; // Ensure health doesn't go below 0
+            updateHealth();
+            
+            // Trigger Game Over
+            if (playerController != null)
+            {
+                playerController.ShowFinishMenu();
+                Debug.Log("Health reached 0! Game Over triggered.");
+            }
+            return;
         }
         updateHealth();
     }
