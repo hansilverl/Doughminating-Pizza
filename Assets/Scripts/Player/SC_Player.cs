@@ -129,9 +129,9 @@ public class SC_Player : MonoBehaviour
                 float requiredDistance = customer != null ? customer.GetInteractionDistance() : interactionDistance;
                 
                 if (actualDistance <= requiredDistance)
-                {
-                    currentInteractable = interactable;
-                    string interactionText = interactable.getInteractionText();
+            {
+                currentInteractable = interactable;
+                string interactionText = interactable.getInteractionText();
 
                     // Debug info for customer interaction
                     if (customer != null)
@@ -139,18 +139,18 @@ public class SC_Player : MonoBehaviour
                         Debug.Log($"Customer interaction: Distance={actualDistance:F1}m, Required={requiredDistance:F1}m");
                     }
 
-                    ToggleOutline(currentInteractable, true);
-                    if (!string.IsNullOrEmpty(interactionText))
-                    {
-                        interactionTextUI.text = interactionText;
-                        interactionPanel.SetActive(true);
-                    }
-                    else
-                    {
-                        interactionPanel.SetActive(false);
-                    }
+                ToggleOutline(currentInteractable, true);
+                if (!string.IsNullOrEmpty(interactionText))
+                {
+                    interactionTextUI.text = interactionText;
+                    interactionPanel.SetActive(true);
+                }
+                else
+                {
+                    interactionPanel.SetActive(false);
+                }
 
-                    return;
+                return;
                 }
             }
         }

@@ -88,6 +88,31 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
             Debug.LogError($"Error initializing CustomerManager: {e.Message}");
         }
     }
+    
+    void Start()
+    {
+        // Subscribe to level changes from RestaurantGameManager
+        RestaurantGameManager.OnLevelChanged += OnDifficultyLevelChanged;
+        StartCoroutine(SpawnLoop());
+    }
+    
+    void OnDestroy()
+    {
+        // Unsubscribe from events
+        RestaurantGameManager.OnLevelChanged -= OnDifficultyLevelChanged;
+    }
+    
+    // Handle difficulty level changes from RestaurantGameManager
+    private void OnDifficultyLevelChanged(int oldLevel, int newLevel)
+    {
+        int oldLimit = currentCustomerLimit;
+        UpdateCustomerLimit();
+        
+        if (currentCustomerLimit != oldLimit)
+        {
+            Debug.Log($"Difficulty level changed from {oldLevel} to {newLevel}! Customer limit changed from {oldLimit} to {currentCustomerLimit}");
+        }
+    }
 
     // Automatically find all seats in CustomerSpawnPoints
     private void AutoFindSeats()
@@ -118,20 +143,42 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         }
     }
 
-    // Update customer limit based on number of orders
+    // Update customer limit based on RestaurantGameManager level or fallback to orders
     private void UpdateCustomerLimit()
     {
-        if (completedOrders < ordersForMidTier)
+        if (RestaurantGameManager.IsGameStarted())
         {
-            currentCustomerLimit = maxCustomersEarly;
-        }
-        else if (completedOrders < ordersForLateTier)
-        {
-            currentCustomerLimit = maxCustomersMid;
+            // Use RestaurantGameManager level system
+            int currentLevel = RestaurantGameManager.GetCurrentLevel();
+            
+            if (currentLevel <= 1)
+            {
+                currentCustomerLimit = maxCustomersEarly; // Level 1: 1 customer
+            }
+            else if (currentLevel <= 3)
+            {
+                currentCustomerLimit = maxCustomersMid;   // Level 2-3: 2 customers
+            }
+            else
+            {
+                currentCustomerLimit = maxCustomersLate;  // Level 4-5: 3 customers
+            }
         }
         else
         {
-            currentCustomerLimit = maxCustomersLate;
+            // Fallback to old order-based system if RestaurantGameManager not available
+            if (completedOrders < ordersForMidTier)
+            {
+                currentCustomerLimit = maxCustomersEarly;
+            }
+            else if (completedOrders < ordersForLateTier)
+            {
+                currentCustomerLimit = maxCustomersMid;
+            }
+            else
+            {
+                currentCustomerLimit = maxCustomersLate;
+            }
         }
     }
 
@@ -170,10 +217,22 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
     // Get current statistics (for UI or debugging)
     public static int GetCompletedOrders() => completedOrders;
     public int GetCurrentCustomerLimit() => currentCustomerLimit;
-
-    void Start()
+    
+    // Calculate adjusted spawn interval based on difficulty
+    private float GetAdjustedSpawnInterval()
     {
-        StartCoroutine(SpawnLoop());
+        if (RestaurantGameManager.IsGameStarted())
+        {
+            // Use difficulty multiplier from RestaurantGameManager
+            float difficultyMultiplier = RestaurantGameManager.GetDifficultyMultiplier();
+            // Higher difficulty = shorter spawn interval (more customers spawn faster)
+            return spawnInterval / difficultyMultiplier;
+        }
+        else
+        {
+            // Fallback to normal spawn interval
+            return spawnInterval;
+        }
     }
 
     IEnumerator SpawnLoop()
@@ -198,8 +257,9 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
                 }
             }
             
-            // after spawning we wait exactly as long as specified in the inspector
-            yield return new WaitForSeconds(spawnInterval);
+            // Calculate spawn interval based on difficulty
+            float adjustedSpawnInterval = GetAdjustedSpawnInterval();
+            yield return new WaitForSeconds(adjustedSpawnInterval);
         }
     }
 
