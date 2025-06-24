@@ -74,7 +74,7 @@ public class PlayerHand : MonoBehaviour
     private IEnumerator ShakeCoroutine(float intensity, float duration)
     {
         if (heldItem == null) yield break;
-        
+
         Vector3 originalPosition = heldItem.transform.localPosition;
         float elapsed = 0f;
 
@@ -92,6 +92,13 @@ public class PlayerHand : MonoBehaviour
     {
         if (heldItem != null)
         {
+
+            Collider playerCollider = GetComponent<Collider>();
+            Collider itemCollider = heldItem.GetComponent<Collider>();
+            if (playerCollider != null && itemCollider != null)
+            {
+                Physics.IgnoreCollision(playerCollider, itemCollider);
+            }
             Destroy(heldItem);
             heldItem.transform.SetParent(null);
             heldItem = null;
@@ -103,6 +110,19 @@ public class PlayerHand : MonoBehaviour
         if (heldItem != null)
         {
             heldItem.transform.SetParent(null);
+            // Move the dropped item a short distance in front of the player to avoid overlap
+            Vector3 dropOffset = transform.forward * 1.5f; // Just a little bit in front
+            heldItem.transform.position = holdPoint.position + dropOffset;
+            heldItem.transform.rotation = Quaternion.identity;
+
+            // Optional: ignore collision between player and item if needed
+            Collider playerCollider = GetComponent<Collider>();
+            Collider itemCollider = heldItem.GetComponent<Collider>();
+            if (playerCollider != null && itemCollider != null)
+            {
+                Physics.IgnoreCollision(playerCollider, itemCollider);
+            }
+
             heldItem = null;
         }
     }
