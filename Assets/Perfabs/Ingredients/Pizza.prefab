@@ -108,6 +108,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4303129753197633936}
+    - targetCorrespondingSourceObject: {fileID: -6689036041284674117, guid: 0020f4a7f6f363c48828b18e01301624,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8370761703308716322}
   m_SourcePrefab: {fileID: -5645937942226959685, guid: 0020f4a7f6f363c48828b18e01301624,
     type: 3}
 --- !u!1 &7697652906340743626 stripped
@@ -190,11 +194,16 @@ MonoBehaviour:
   hasBacon: 0
   hasPineapple: 0
   hasPepperoni: 0
-  saucePrefab: {fileID: 0}
-  cheesePrefab: {fileID: 0}
-  baconPrefab: {fileID: 0}
-  pineapplePrefab: {fileID: 0}
-  pepperoniPrefab: {fileID: 0}
+  saucePrefab: {fileID: 3909769123014092384, guid: adb7c7843dffc2f4c9e08c145b28e7df,
+    type: 3}
+  cheesePrefab: {fileID: -8098169881513260187, guid: 465eccd961aa9214090491919f94f763,
+    type: 3}
+  baconPrefab: {fileID: -8098169881513260187, guid: 2468918c3e305ef4da4204fe22326a51,
+    type: 3}
+  pineapplePrefab: {fileID: -8098169881513260187, guid: e3d42457bd49da44d97b1e69c432bd06,
+    type: 3}
+  pepperoniPrefab: {fileID: -8098169881513260187, guid: c49313095c4c86d4cb3b0f1cd75e5cf9,
+    type: 3}
 --- !u!64 &7056220659163187275
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -230,3 +239,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMaterial: {fileID: 2100000, guid: aba4aefe2332979428c5e817e9e20c9e, type: 2}
+--- !u!114 &-8370761703308716322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7697652906340743626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42ef064fecb7448d29f95dfeff0a3471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handPositionOffset: {x: 0, y: 0, z: 0}
+  handRotationOffset: {x: 0, y: 0, z: 0}
+  defaultRotation: {x: 0, y: 0, z: 0}
+  counterPositionOffset: 0
+  ingredientName: 
+  pizzaUI: {fileID: 5021707866343000039, guid: 681795a99e60d6e40853df996a3487e6, type: 3}
+  CookLevel: 0
+  hasSauce: 0
+  hasCheese: 0
+  hasBacon: 0
+  hasPineapple: 0
+  hasPepperoni: 0
+  saucePrefab: {fileID: 3909769123014092384, guid: adb7c7843dffc2f4c9e08c145b28e7df,
+    type: 3}
+  cheesePrefab: {fileID: -8098169881513260187, guid: 465eccd961aa9214090491919f94f763,
+    type: 3}
+  baconPrefab: {fileID: -8098169881513260187, guid: 2468918c3e305ef4da4204fe22326a51,
+    type: 3}
+  pineapplePrefab: {fileID: -8098169881513260187, guid: e3d42457bd49da44d97b1e69c432bd06,
+    type: 3}
+  pepperoniPrefab: {fileID: -8098169881513260187, guid: c49313095c4c86d4cb3b0f1cd75e5cf9,
+    type: 3}
