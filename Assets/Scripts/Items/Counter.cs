@@ -8,7 +8,15 @@ public class Counter : MonoBehaviour, IInteractable
 {
     public void Interact()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        SC_Player player = GameObject.FindWithTag("Player").GetComponent<SC_Player>();
+        if (player == null)
+        {
+            Debug.LogError("PlayerInteraction component not found on Player object.");
+            return;
+        }
+        Camera playerCamera = player.playerCamera;
+        // Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hitInfo))
         {
             Vector3 hitCoordinates = hitInfo.point;
