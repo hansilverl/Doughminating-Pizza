@@ -6,7 +6,7 @@ public class ProdController : MonoBehaviour
 {
     void Awake()
     {
-        #if DEBUG
+        #if PRODUCTION
             this.gameObject.SetActive(false);
         #endif
     }
