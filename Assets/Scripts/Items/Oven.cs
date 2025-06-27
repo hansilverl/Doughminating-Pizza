@@ -99,36 +99,28 @@ public class Oven : MonoBehaviour, IInteractable
             ovenTimerImage.transform.localRotation = Quaternion.identity;
         }
 
+        // Capture the pizza's original color
+        Color originalColor = pizza.GetComponent<Renderer>().material.color;
+        // burnt dough colour for the pizza
+        Color burntColor = new Color32(128, 64, 26, 255); // Dark brown color for burnt pizza
+
         while (isCooking)
         {
             cookTimer += Time.deltaTime;
 
+            // Phase 1: Raw -> Burnt (just darken over time)
+            float t = Mathf.Clamp01(cookTimer / burnDuration);
+            pizza.SetPizzaColor(Color.Lerp(originalColor, burntColor, t));
+
             if (ovenTimerImage != null)
             {
-                // Phase 1: Cooking
-                if (cookTimer <= cookDuration)
-                {
-                    float cookProgress = cookTimer / cookDuration;
-                    ovenTimerImage.fillAmount = 1f - cookProgress;
-                    ovenTimerImage.color = Color.green;
-                    // ovenTimerImage.transform.Rotate(Vector3.forward, -360f * Time.deltaTime / cookDuration);
-                }
-                // Phase 2: Burning
-                else if (cookDuration <= cookTimer && cookTimer <= burnDuration)
-                {
-                    float burnProgress = (cookTimer - cookDuration) / (burnDuration - cookDuration);
-                    ovenTimerImage.fillAmount = burnProgress;
-                    ovenTimerImage.color = Color.Lerp(Color.yellow, Color.red, burnProgress);
-                    // ovenTimerImage.transform.Rotate(Vector3.forward, -360f * Time.deltaTime / (burnDuration - cookDuration));
-                }
+                ovenTimerImage.fillAmount = 1f - t;
+                ovenTimerImage.color = Color.Lerp(Color.green, Color.red, t);
             }
-
-            // float progress = 1f - (cookTimer / burnDuration); // 1 -> 0
-            // if (ovenTimerImage != null)
-            //     ovenTimerImage.fillAmount = Mathf.Clamp01(progress);
 
             if (cookTimer >= burnDuration)
             {
+                pizza.SetPizzaColor(burntColor);
                 pizza.SetCookState(CookState.Burnt);
                 currentState = CookState.Burnt;
                 if (smokeEffect)
@@ -144,8 +136,8 @@ public class Oven : MonoBehaviour, IInteractable
                 currentState = CookState.Cooked;
             }
             yield return null;
-
         }
+
         // Clean up
         if (ovenTimerImage != null)
         {

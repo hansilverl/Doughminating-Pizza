@@ -28,6 +28,9 @@ public class Pizza : Ingredient
     private GameObject visualPineapple;
     private GameObject visualPepperoni;
 
+    private Renderer pizzaRenderer;
+    private Material pizzaMaterial;
+
     // Public properties to access ingredient states
     public bool HasSauce => hasSauce;
     public bool HasCheese => hasCheese;
@@ -48,6 +51,20 @@ public class Pizza : Ingredient
             uiInstance.transform.localPosition = new Vector3(0, 0, 1) * 1f;
             pizzaUI = uiInstance;
         }
+
+        // Initialize renderer and material for color changing
+        pizzaRenderer = GetComponent<Renderer>();
+        if (pizzaRenderer != null)
+        {
+            // Use .material to get a unique instance for this pizza
+            pizzaMaterial = pizzaRenderer.material;
+        }
+    }
+
+    public void SetPizzaColor(Color color)
+    {
+        if (pizzaMaterial != null)
+            pizzaMaterial.color = color;
     }
 
     public override void Interact()
@@ -120,89 +137,89 @@ public class Pizza : Ingredient
         }
     }
 
-    
-    private void SpawnVisualIngredient(IngredientType ingredientType)
-{
-    GameObject prefab = null;
-    Vector3 relativeOffset = Vector3.zero;
-    Quaternion worldRotation = Quaternion.identity;
-    Vector3 localScale = Vector3.one;
-    
-    // Height adjustment to ensure ingredients appear properly on top of the pizza
-    float heightAdjustment = 0.02f; // Adjust this value as needed to move ingredients up
-    
-    switch (ingredientType)
-    {
-        case IngredientType.Sauce:
-            prefab = saucePrefab;
-            relativeOffset = new Vector3(0f, 0.0124f, 0.003f);
-            worldRotation = Quaternion.Euler(-90f, 0f, 0f);
-            localScale = new Vector3(1.55f, 1.55f, 1.472f);
-            heightAdjustment = 0.005f; // Sauce needs less height
-            break;
-        case IngredientType.Cheese:
-            prefab = cheesePrefab;
-            relativeOffset = new Vector3(-0.001f, 0.024f, 0f);
-            worldRotation = Quaternion.Euler(0f, 0f, 0f);
-            localScale = new Vector3(0.2f, 0.1f, 0.2f);
-            heightAdjustment = 0.01f;
-            break;
-        case IngredientType.Bacon:
-            prefab = baconPrefab;
-            relativeOffset = new Vector3(-0.013f, 0.02f, -0.02f);
-            worldRotation = Quaternion.Euler(90f, 0f, 0f);
-            localScale = new Vector3(0.19f, 0.23f, 0.2f);
-            heightAdjustment = 0.03f;
-            break;
-        case IngredientType.Pineapple:
-            prefab = pineapplePrefab;
-            relativeOffset = new Vector3(-0.009f, 0.0471f, -0.004f);
-            worldRotation = Quaternion.Euler(0f, 0f, 0f);
-            localScale = new Vector3(0.15f, 0.15f, 0.15f);
-            heightAdjustment = 0.03f;
-            break;
-        case IngredientType.Pepperoni:
-            prefab = pepperoniPrefab;
-            relativeOffset = new Vector3(0.0025f, 0.03f, 0.0f);
-            worldRotation = Quaternion.Euler(0f, 0f, 0f);
-            localScale = new Vector3(0.18f, 0.18f, 0.19f);
-            heightAdjustment = 0.03f;
-            break;
-    }
 
-    if (prefab != null)
+    private void SpawnVisualIngredient(IngredientType ingredientType)
     {
-        // First get the local space position based on our pizza's rotation
-        Vector3 localPosition = transform.InverseTransformPoint(transform.position + relativeOffset);
-        
-        // Apply height adjustment in the pizza's local up direction
-        // Since pizza is rotated -90 on X, its "up" is actually world Z
-        localPosition.z += heightAdjustment;
-        
-        // Now transform back to world space
-        Vector3 worldPosition = transform.TransformPoint(localPosition);
-        
-        // Instantiate and set up the ingredient
-        GameObject visualIngredient = Instantiate(prefab, worldPosition, worldRotation);
-        visualIngredient.transform.localScale = localScale;
-        visualIngredient.transform.SetParent(this.transform, true);
+        GameObject prefab = null;
+        Vector3 relativeOffset = Vector3.zero;
+        Quaternion worldRotation = Quaternion.identity;
+        Vector3 localScale = Vector3.one;
+
+        // Height adjustment to ensure ingredients appear properly on top of the pizza
+        float heightAdjustment = 0.02f; // Adjust this value as needed to move ingredients up
 
         switch (ingredientType)
         {
-            case IngredientType.Sauce: visualSauce = visualIngredient; break;
-            case IngredientType.Cheese: visualCheese = visualIngredient; break;
-            case IngredientType.Bacon: visualBacon = visualIngredient; break;
-            case IngredientType.Pineapple: visualPineapple = visualIngredient; break;
-            case IngredientType.Pepperoni: visualPepperoni = visualIngredient; break;
+            case IngredientType.Sauce:
+                prefab = saucePrefab;
+                relativeOffset = new Vector3(0f, 0.0124f, 0.003f);
+                worldRotation = Quaternion.Euler(-90f, 0f, 0f);
+                localScale = new Vector3(1.55f, 1.55f, 1.472f);
+                heightAdjustment = 0.005f; // Sauce needs less height
+                break;
+            case IngredientType.Cheese:
+                prefab = cheesePrefab;
+                relativeOffset = new Vector3(-0.001f, 0.024f, 0f);
+                worldRotation = Quaternion.Euler(0f, 0f, 0f);
+                localScale = new Vector3(0.2f, 0.1f, 0.2f);
+                heightAdjustment = 0.01f;
+                break;
+            case IngredientType.Bacon:
+                prefab = baconPrefab;
+                relativeOffset = new Vector3(-0.013f, 0.02f, -0.02f);
+                worldRotation = Quaternion.Euler(90f, 0f, 0f);
+                localScale = new Vector3(0.19f, 0.23f, 0.2f);
+                heightAdjustment = 0.03f;
+                break;
+            case IngredientType.Pineapple:
+                prefab = pineapplePrefab;
+                relativeOffset = new Vector3(-0.009f, 0.0471f, -0.004f);
+                worldRotation = Quaternion.Euler(0f, 0f, 0f);
+                localScale = new Vector3(0.15f, 0.15f, 0.15f);
+                heightAdjustment = 0.03f;
+                break;
+            case IngredientType.Pepperoni:
+                prefab = pepperoniPrefab;
+                relativeOffset = new Vector3(0.0025f, 0.03f, 0.0f);
+                worldRotation = Quaternion.Euler(0f, 0f, 0f);
+                localScale = new Vector3(0.18f, 0.18f, 0.19f);
+                heightAdjustment = 0.03f;
+                break;
         }
 
-        Debug.Log($"Spawned visual {ingredientType} at world position: {worldPosition}, world rotation: {worldRotation.eulerAngles}");
+        if (prefab != null)
+        {
+            // First get the local space position based on our pizza's rotation
+            Vector3 localPosition = transform.InverseTransformPoint(transform.position + relativeOffset);
+
+            // Apply height adjustment in the pizza's local up direction
+            // Since pizza is rotated -90 on X, its "up" is actually world Z
+            localPosition.z += heightAdjustment;
+
+            // Now transform back to world space
+            Vector3 worldPosition = transform.TransformPoint(localPosition);
+
+            // Instantiate and set up the ingredient
+            GameObject visualIngredient = Instantiate(prefab, worldPosition, worldRotation);
+            visualIngredient.transform.localScale = localScale;
+            visualIngredient.transform.SetParent(this.transform, true);
+
+            switch (ingredientType)
+            {
+                case IngredientType.Sauce: visualSauce = visualIngredient; break;
+                case IngredientType.Cheese: visualCheese = visualIngredient; break;
+                case IngredientType.Bacon: visualBacon = visualIngredient; break;
+                case IngredientType.Pineapple: visualPineapple = visualIngredient; break;
+                case IngredientType.Pepperoni: visualPepperoni = visualIngredient; break;
+            }
+
+            Debug.Log($"Spawned visual {ingredientType} at world position: {worldPosition}, world rotation: {worldRotation.eulerAngles}");
+        }
+        else
+        {
+            Debug.LogWarning($"No prefab assigned for {ingredientType}!");
+        }
     }
-    else
-    {
-        Debug.LogWarning($"No prefab assigned for {ingredientType}!");
-    }
-}
 
     public void Cook()
     {
