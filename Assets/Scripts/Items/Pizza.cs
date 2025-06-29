@@ -22,11 +22,7 @@ public class Pizza : Ingredient
     [SerializeField] private GameObject pepperoniPrefab;
 
     // Store references to spawned visual ingredients
-    private GameObject visualSauce;
-    private GameObject visualCheese;
-    private GameObject visualBacon;
-    private GameObject visualPineapple;
-    private GameObject visualPepperoni;
+    private Dictionary<IngredientType, GameObject> visualIngredients = new Dictionary<IngredientType, GameObject>();
 
     private Renderer pizzaRenderer;
     private Material pizzaMaterial;
@@ -82,39 +78,7 @@ public class Pizza : Ingredient
                     return;
                 }
 
-                bool ingredientAdded = false;
-                if (ingredient is Sauce && !hasSauce)
-                {
-                    hasSauce = true;
-                    ingredientAdded = true;
-                    SpawnVisualIngredient(IngredientType.Sauce);
-                }
-                else if (ingredient is Cheese && !hasCheese)
-                {
-                    hasCheese = true;
-                    ingredientAdded = true;
-                    SpawnVisualIngredient(IngredientType.Cheese);
-                }
-                else if (ingredient is Bacon && !hasBacon)
-                {
-                    hasBacon = true;
-                    ingredientAdded = true;
-                    SpawnVisualIngredient(IngredientType.Bacon);
-                }
-                else if (ingredient is Pineapple && !hasPineapple)
-                {
-                    hasPineapple = true;
-                    ingredientAdded = true;
-                    SpawnVisualIngredient(IngredientType.Pineapple);
-                }
-                else if (ingredient is Pepperoni && !hasPepperoni)
-                {
-                    hasPepperoni = true;
-                    ingredientAdded = true;
-                    SpawnVisualIngredient(IngredientType.Pepperoni);
-                }
-
-                if (ingredientAdded)
+                if (TryAddIngredient(ingredient))
                 {
                     playerHand.Remove();
                     AddIngredient(ingredient);
@@ -137,88 +101,71 @@ public class Pizza : Ingredient
         }
     }
 
+    /// <summary>
+    /// Attempts to add an ingredient to the pizza
+    /// </summary>
+    /// <param name="ingredient">The ingredient to add</param>
+    /// <returns>True if the ingredient was added, false otherwise</returns>
+    private bool TryAddIngredient(Ingredient ingredient)
+    {
+        switch (ingredient)
+        {
+            case Sauce _ when !hasSauce:
+                hasSauce = true;
+                SpawnVisualIngredient(IngredientType.Sauce);
+                return true;
+            
+            case Cheese _ when !hasCheese:
+                hasCheese = true;
+                SpawnVisualIngredient(IngredientType.Cheese);
+                return true;
+            
+            case Bacon _ when !hasBacon:
+                hasBacon = true;
+                SpawnVisualIngredient(IngredientType.Bacon);
+                return true;
+            
+            case Pineapple _ when !hasPineapple:
+                hasPineapple = true;
+                SpawnVisualIngredient(IngredientType.Pineapple);
+                return true;
+            
+            case Pepperoni _ when !hasPepperoni:
+                hasPepperoni = true;
+                SpawnVisualIngredient(IngredientType.Pepperoni);
+                return true;
+            
+            default:
+                return false;
+        }
+    }
+
 
     private void SpawnVisualIngredient(IngredientType ingredientType)
     {
-        GameObject prefab = null;
-        Vector3 relativeOffset = Vector3.zero;
-        Quaternion worldRotation = Quaternion.identity;
-        Vector3 localScale = Vector3.one;
+        IngredientVisualConfig config = PizzaIngredientConfigs.GetConfigForIngredient(
+            ingredientType, saucePrefab, cheesePrefab, baconPrefab, pineapplePrefab, pepperoniPrefab);
 
-        // Height adjustment to ensure ingredients appear properly on top of the pizza
-        float heightAdjustment = 0.02f; // Adjust this value as needed to move ingredients up
-
-        switch (ingredientType)
-        {
-            case IngredientType.Sauce:
-                prefab = saucePrefab;
-                relativeOffset = new Vector3(0f, 0.0124f, 0.003f);
-                worldRotation = Quaternion.Euler(-90f, 0f, 0f);
-                localScale = new Vector3(1.55f, 1.55f, 1.472f);
-                heightAdjustment = 0.005f; // Sauce needs less height
-                break;
-            case IngredientType.Cheese:
-                prefab = cheesePrefab;
-                relativeOffset = new Vector3(-0.001f, 0.024f, 0f);
-                worldRotation = Quaternion.Euler(0f, 0f, 0f);
-                localScale = new Vector3(0.2f, 0.1f, 0.2f);
-                heightAdjustment = 0.01f;
-                break;
-            case IngredientType.Bacon:
-                prefab = baconPrefab;
-                relativeOffset = new Vector3(-0.013f, 0.02f, -0.02f);
-                worldRotation = Quaternion.Euler(90f, 0f, 0f);
-                localScale = new Vector3(0.19f, 0.23f, 0.2f);
-                heightAdjustment = 0.03f;
-                break;
-            case IngredientType.Pineapple:
-                prefab = pineapplePrefab;
-                relativeOffset = new Vector3(-0.009f, 0.0471f, -0.004f);
-                worldRotation = Quaternion.Euler(0f, 0f, 0f);
-                localScale = new Vector3(0.15f, 0.15f, 0.15f);
-                heightAdjustment = 0.03f;
-                break;
-            case IngredientType.Pepperoni:
-                prefab = pepperoniPrefab;
-                relativeOffset = new Vector3(0.0025f, 0.03f, 0.0f);
-                worldRotation = Quaternion.Euler(0f, 0f, 0f);
-                localScale = new Vector3(0.18f, 0.18f, 0.19f);
-                heightAdjustment = 0.03f;
-                break;
-        }
-
-        if (prefab != null)
-        {
-            // First get the local space position based on our pizza's rotation
-            Vector3 localPosition = transform.InverseTransformPoint(transform.position + relativeOffset);
-
-            // Apply height adjustment in the pizza's local up direction
-            // Since pizza is rotated -90 on X, its "up" is actually world Z
-            localPosition.z += heightAdjustment;
-
-            // Now transform back to world space
-            Vector3 worldPosition = transform.TransformPoint(localPosition);
-
-            // Instantiate and set up the ingredient
-            GameObject visualIngredient = Instantiate(prefab, worldPosition, worldRotation);
-            visualIngredient.transform.localScale = localScale;
-            visualIngredient.transform.SetParent(this.transform, true);
-
-            switch (ingredientType)
-            {
-                case IngredientType.Sauce: visualSauce = visualIngredient; break;
-                case IngredientType.Cheese: visualCheese = visualIngredient; break;
-                case IngredientType.Bacon: visualBacon = visualIngredient; break;
-                case IngredientType.Pineapple: visualPineapple = visualIngredient; break;
-                case IngredientType.Pepperoni: visualPepperoni = visualIngredient; break;
-            }
-
-            Debug.Log($"Spawned visual {ingredientType} at world position: {worldPosition}, world rotation: {worldRotation.eulerAngles}");
-        }
-        else
+        if (config.prefab == null)
         {
             Debug.LogWarning($"No prefab assigned for {ingredientType}!");
+            return;
         }
+
+        // Calculate position using the pizza's transform
+        Vector3 localPosition = transform.InverseTransformPoint(transform.position + config.relativeOffset);
+        localPosition.z += config.heightAdjustment;
+        Vector3 worldPosition = transform.TransformPoint(localPosition);
+
+        // Instantiate and set up the ingredient
+        GameObject visualIngredient = Instantiate(config.prefab, worldPosition, config.worldRotation);
+        visualIngredient.transform.localScale = config.localScale;
+        visualIngredient.transform.SetParent(this.transform, true);
+
+        // Store reference to the visual ingredient
+        visualIngredients[ingredientType] = visualIngredient;
+
+        Debug.Log($"Spawned visual {ingredientType} at world position: {worldPosition}, world rotation: {config.worldRotation.eulerAngles}");
     }
 
     public void Cook()
@@ -271,15 +218,5 @@ public class Pizza : Ingredient
     public void AddIngredient(Ingredient ingredient)
     {
         pizzaUI.GetComponent<PizzaUIController>().addIngredient(ingredient);
-    }
-
-    // Enum to identify ingredient types
-    private enum IngredientType
-    {
-        Sauce,
-        Cheese,
-        Bacon,
-        Pineapple,
-        Pepperoni
     }
 }

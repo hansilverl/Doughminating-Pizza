@@ -1,14 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Cheese : Ingredient
+public class Cheese : SimpleIngredient
 {
-    public override void Interact() {
-        base.Interact();
-    }
-
-    public override string getInteractionText() {
-        return "Pick " + GetIngredientName();
-    }
+    // Inherits basic functionality from SimpleIngredient
 }

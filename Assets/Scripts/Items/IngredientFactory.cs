@@ -9,19 +9,26 @@ public class IngredientFactory : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Debug.Log("Default Interact() called on IngredientFactory. This should not be called directly.");
         if (prefab == null)
         {
+            Debug.LogWarning("No prefab assigned to IngredientFactory!");
             return;
         }
-        PlayerHand playerHand = GameObject.FindWithTag("Player").GetComponent<PlayerHand>();
-        if(playerHand.IsHoldingItem) {
+        
+        PlayerHand playerHand = GameObject.FindWithTag("Player")?.GetComponent<PlayerHand>();
+        if (playerHand == null)
+        {
+            Debug.LogError("Player hand not found!");
+            return;
+        }
+        
+        if (playerHand.IsHoldingItem) 
+        {
             playerHand.InvalidAction("You are already holding an item!", 2f);
             return;
         }
 
-
-        // Vector3 spawnPosition = transform.position + transform.forward * 0.5f + Vector3.up * 0.3f;
+        // Spawn ingredient directly into the player's hand
         Vector3 spawnPosition = transform.position;
         GameObject spawned = Instantiate(prefab, spawnPosition, Quaternion.identity);
 
@@ -30,50 +37,58 @@ public class IngredientFactory : MonoBehaviour, IInteractable
         {
             playerHand.PickUp(spawned);
         }
-
     }
 
-    // public void Interact(Transform point) {
-    //     if(prefab == null)
-    //     {
-    //         return;
-    //     }
-    //     Debug.Log("Spawning ingredient at: " + point.position);
-    //     Vector3 spawnRotation = point.rotation.eulerAngles;
-    //     Vector3 spawnPosition = point.position;
-    //     Vector3 itemRotation = prefab.GetComponent<IPickable>().GetDefaultRotation();
-    //     float itemOffset = prefab.GetComponent<IPickable>().GetCounterPositionOffset();
-    //     Debug.Log("Item offset: " + itemOffset);
-    //     GameObject spawned = Instantiate(prefab, Vector3.zero, Quaternion.Euler(spawnRotation.x + itemRotation.x, spawnRotation.y + itemRotation.y, spawnRotation.z + itemRotation.z), point);
-    //     spawned.transform.localPosition = new Vector3(0f, itemOffset, 0f);
-    //     Debug.Log("Spawned ingredient: " + spawned.name);
-    // }
-
-    public void Interact(Transform point) {
-        if (prefab == null) {
+    public void Interact(Transform point) 
+    {
+        if (prefab == null) 
+        {
+            Debug.LogWarning("No prefab assigned to IngredientFactory!");
             return;
         }
 
-        Vector3 spawnRotation = point.rotation.eulerAngles;
-        Vector3 itemRotation = prefab.GetComponent<IPickable>().GetDefaultRotation();
-        float itemOffset = prefab.GetComponent<IPickable>().GetCounterPositionOffset();
+        IPickable pickable = prefab.GetComponent<IPickable>();
+        if (pickable == null)
+        {
+            Debug.LogWarning("Prefab doesn't have IPickable component!");
+            return;
+        }
 
-        // 1. Instantiate WITHOUT parent
-        GameObject spawned = Instantiate(prefab, point.position, Quaternion.Euler(
+        SpawnIngredientAtPoint(point, pickable);
+    }
+
+    /// <summary>
+    /// Spawns an ingredient at the specified point with proper positioning and rotation
+    /// </summary>
+    /// <param name="spawnPoint">The transform where the ingredient should be spawned</param>
+    /// <param name="pickable">The IPickable component of the prefab</param>
+    private void SpawnIngredientAtPoint(Transform spawnPoint, IPickable pickable)
+    {
+        Vector3 spawnRotation = spawnPoint.rotation.eulerAngles;
+        Vector3 itemRotation = pickable.GetDefaultRotation();
+        float itemOffset = pickable.GetCounterPositionOffset();
+
+        // Calculate final rotation
+        Quaternion finalRotation = Quaternion.Euler(
             spawnRotation.x + itemRotation.x,
             spawnRotation.y + itemRotation.y,
             spawnRotation.z + itemRotation.z
-        ));
+        );
+
+        // 1. Instantiate WITHOUT parent
+        GameObject spawned = Instantiate(prefab, spawnPoint.position, finalRotation);
         
         // 2. THEN parent it safely using worldPositionStays=true
-        spawned.transform.SetParent(point, true);
+        spawned.transform.SetParent(spawnPoint, true);
 
         // 3. AFTER parenting, adjust the local position
         spawned.transform.localPosition = new Vector3(
             spawned.transform.localPosition.x, 
-            spawned.transform.localPosition.y + itemOffset + planeOffset, // Adjust only the y component
+            spawned.transform.localPosition.y + itemOffset + planeOffset,
             spawned.transform.localPosition.z
         );
+
+        Debug.Log($"Spawned {prefab.name} at {spawnPoint.position}");
     }
 
 

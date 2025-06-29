@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Bacon : Ingredient
+public class Bacon : SimpleIngredient
 {
-    public override string getInteractionText() {
-        return "Pick " + GetIngredientName();
-    }
+    // Inherits basic functionality from SimpleIngredient
 }
