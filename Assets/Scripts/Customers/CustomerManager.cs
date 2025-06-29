@@ -7,7 +7,7 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
     [Header("Doors")]
     [SerializeField] public Transform entryDoor;    // people come here
     [SerializeField] public Transform exitDoor;     // leave from here
-    
+
     [Header("Seats & Spawning")]
     [SerializeField] private Transform[] seatTransforms;         // "chairs" points - will be auto-found if empty
     [SerializeField] public GameObject customerPrefab;          // prefab with CustomerController
@@ -23,7 +23,7 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
 
     [HideInInspector]
     public bool[] availableSeatForCustomers;
-    
+
     // Order statistics
     private static int completedOrders = 0;
     private int currentCustomerLimit = 1;
@@ -41,7 +41,7 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         maxCustomersLate = 3;
         ordersForMidTier = 5;
         ordersForLateTier = 10;
-        
+
         Debug.Log("CustomerManager Reset() called - default values set");
     }
 
@@ -66,21 +66,21 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
             {
                 AutoFindSeats();
             }
-            
+
             // Additional check after auto-search
             if (seatTransforms == null || seatTransforms.Length == 0)
             {
                 Debug.LogError("No seats found! CustomerManager cannot function without seats.");
                 return;
             }
-            
-        availableSeatForCustomers = new bool[seatTransforms.Length];
-        for (int i = 0; i < availableSeatForCustomers.Length; i++)
-            availableSeatForCustomers[i] = true;
-                
+
+            availableSeatForCustomers = new bool[seatTransforms.Length];
+            for (int i = 0; i < availableSeatForCustomers.Length; i++)
+                availableSeatForCustomers[i] = true;
+
             // Set initial customer limit
             UpdateCustomerLimit();
-            
+
             Debug.Log($"CustomerManager initialized with {seatTransforms.Length} seats, current limit: {currentCustomerLimit} customers");
         }
         catch (System.Exception e)
@@ -95,19 +95,19 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         RestaurantGameManager.OnLevelChanged += OnDifficultyLevelChanged;
         StartCoroutine(SpawnLoop());
     }
-    
+
     void OnDestroy()
     {
         // Unsubscribe from events
         RestaurantGameManager.OnLevelChanged -= OnDifficultyLevelChanged;
     }
-    
+
     // Handle difficulty level changes from RestaurantGameManager
     private void OnDifficultyLevelChanged(int oldLevel, int newLevel)
     {
         int oldLimit = currentCustomerLimit;
         UpdateCustomerLimit();
-        
+
         if (currentCustomerLimit != oldLimit)
         {
             Debug.Log($"Difficulty level changed from {oldLevel} to {newLevel}! Customer limit changed from {oldLimit} to {currentCustomerLimit}");
@@ -121,7 +121,7 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         if (spawnPoints != null)
         {
             List<Transform> seats = new List<Transform>();
-            
+
             // Find all child objects that start with "Seat_"
             foreach (Transform child in spawnPoints.transform)
             {
@@ -130,10 +130,10 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
                     seats.Add(child);
                 }
             }
-            
+
             // Sort by name for correct order (Seat_0, Seat_1, etc.)
             seats.Sort((a, b) => a.name.CompareTo(b.name));
-            
+
             seatTransforms = seats.ToArray();
             Debug.Log($"Auto-found {seatTransforms.Length} seats: {string.Join(", ", System.Array.ConvertAll(seatTransforms, s => s.name))}");
         }
@@ -150,7 +150,7 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         {
             // Use RestaurantGameManager level system
             int currentLevel = RestaurantGameManager.GetCurrentLevel();
-            
+
             if (currentLevel <= 1)
             {
                 currentCustomerLimit = maxCustomersEarly; // Level 1: 1 customer
@@ -201,12 +201,12 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
     {
         completedOrders++;
         Debug.Log($"Order completed! Total orders: {completedOrders}");
-        
+
         if (Instance != null)
         {
             int oldLimit = Instance.currentCustomerLimit;
             Instance.UpdateCustomerLimit();
-            
+
             if (Instance.currentCustomerLimit != oldLimit)
             {
                 Debug.Log($"Customer limit increased from {oldLimit} to {Instance.currentCustomerLimit}!");
@@ -217,7 +217,7 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
     // Get current statistics (for UI or debugging)
     public static int GetCompletedOrders() => completedOrders;
     public int GetCurrentCustomerLimit() => currentCustomerLimit;
-    
+
     // Calculate adjusted spawn interval based on difficulty
     private float GetAdjustedSpawnInterval()
     {
@@ -241,22 +241,22 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
         {
             // Check if customer limit is not exceeded
             int currentCustomers = GetCurrentCustomerCount();
-            
+
             if (currentCustomers < currentCustomerLimit)
             {
                 // Get list of all available seats
                 List<int> availableSeats = GetAvailableSeats();
-                
+
                 // If there are available seats, choose random one
                 if (availableSeats.Count > 0)
-            {
+                {
                     int randomSeatIndex = availableSeats[Random.Range(0, availableSeats.Count)];
                     SpawnCustomerAtSeat(randomSeatIndex);
-                    
+
                     Debug.Log($"Spawned customer ({currentCustomers + 1}/{currentCustomerLimit}). Orders completed: {completedOrders}");
                 }
             }
-            
+
             // Calculate spawn interval based on difficulty
             float adjustedSpawnInterval = GetAdjustedSpawnInterval();
             yield return new WaitForSeconds(adjustedSpawnInterval);
@@ -267,15 +267,15 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
     private List<int> GetAvailableSeats()
     {
         List<int> availableSeats = new List<int>();
-        
+
         for (int i = 0; i < availableSeatForCustomers.Length; i++)
         {
             if (availableSeatForCustomers[i])
             {
                 availableSeats.Add(i);
-                }
             }
-        
+        }
+
         Debug.Log($"Available seats: [{string.Join(", ", availableSeats)}] out of {availableSeatForCustomers.Length} total seats");
         return availableSeats;
     }
@@ -288,26 +288,26 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
             Debug.LogError("CustomerManager data is null! Cannot spawn customer.");
             return;
         }
-        
+
         if (seatIndex < 0 || seatIndex >= availableSeatForCustomers.Length || seatIndex >= seatTransforms.Length)
         {
             Debug.LogError($"Invalid seat index {seatIndex}! Available seats: 0-{availableSeatForCustomers.Length - 1}");
             return;
         }
-        
+
         // Additional check that seat is actually available
         if (!availableSeatForCustomers[seatIndex])
         {
             Debug.LogWarning($"Trying to spawn customer at already occupied seat {seatIndex}!");
             return;
         }
-        
+
         if (customerPrefab == null)
         {
             Debug.LogError("Customer prefab is null! Cannot spawn customer.");
             return;
         }
-        
+
         Vector3 spawnPos = entryDoor != null ? entryDoor.position : Vector3.zero;
         spawnPos.y = 1f; // Elevate customer so feet touch floor (capsule height=2, center at +1)
 
@@ -319,29 +319,29 @@ public class CustomerManager : MonoBehaviour   // class and file with the same n
             Destroy(go);
             return;
         }
-        
+
         ctrl.mySeat = seatIndex;
         Debug.Log($"Assigned seat {seatIndex} to customer {ctrl.gameObject.name}");
-        
+
         // Set destination so feet touch floor with small random offset
         Vector3 destination = seatTransforms[seatIndex] != null ? seatTransforms[seatIndex].position : Vector3.zero;
         destination.y = 1f; // Elevate destination so feet touch floor
-        
+
         // Add random offset so customers don't sit in same spot
         float randomOffsetX = Random.Range(-0.8f, 0.8f);  // Small offset to avoid exact overlap
         float randomOffsetZ = Random.Range(-0.8f, 0.8f);  // Small offset to avoid exact overlap
         destination.x += randomOffsetX;
         destination.z += randomOffsetZ;
-        
+
         ctrl.destination = destination;
-        
+
         // we pass the doors
         ctrl.entryPoint = entryDoor;
         ctrl.exitPoint = exitDoor;
 
         // Immediately occupy the seat
         availableSeatForCustomers[seatIndex] = false;
-        
+
         string seatName = seatTransforms[seatIndex] != null ? seatTransforms[seatIndex].name : $"Seat_{seatIndex}";
         Debug.Log($"Spawned customer at seat {seatIndex} ({seatName}) with offset ({randomOffsetX:F2}, {randomOffsetZ:F2})");
     }
